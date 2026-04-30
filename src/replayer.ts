@@ -147,22 +147,13 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}): Pro
       case "wheel": {
         await waitUntil(event.t);
         const we = event as ReplayWheelEvent;
-        await page.evaluate(
-          (x: number, y: number, deltaX: number, deltaY: number, deltaMode: number) => {
-            const el = document.elementFromPoint(x, y) ?? document.documentElement;
-            el.dispatchEvent(new WheelEvent("wheel", {
-              bubbles: true,
-              cancelable: true,
-              view: window,
-              clientX: x,
-              clientY: y,
-              deltaX,
-              deltaY,
-              deltaMode,
-            }));
-          },
-          we.x, we.y, we.deltaX, we.deltaY, we.deltaMode
-        );
+        // Normalize to pixels — page.mouse.wheel() always dispatches in pixel mode.
+        // deltaMode 1 = lines (~40px each), deltaMode 2 = pages (viewport height).
+        const LINE = 40;
+        const PAGE = session.viewport.height;
+        const scale = we.deltaMode === 1 ? LINE : we.deltaMode === 2 ? PAGE : 1;
+        await page.mouse.move(we.x, we.y);
+        await page.mouse.wheel({ deltaX: we.deltaX * scale, deltaY: we.deltaY * scale });
         break;
       }
 
