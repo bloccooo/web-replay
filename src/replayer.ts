@@ -6,7 +6,7 @@ import type {
   MouseMoveEvent,
   MouseButtonEvent,
   NavigateEvent,
-  ScrollEvent,
+  WheelEvent as ReplayWheelEvent,
   InputEvent,
   KeyEvent,
 } from "./types.js";
@@ -144,14 +144,10 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}): Pro
         break;
       }
 
-      case "scroll": {
+      case "wheel": {
         await waitUntil(event.t);
-        const se = event as ScrollEvent;
-        await page.evaluate(
-          (sx: number, sy: number) => window.scrollTo(sx, sy),
-          se.scrollX,
-          se.scrollY
-        );
+        const we = event as ReplayWheelEvent;
+        await page.mouse.wheel({ deltaX: we.deltaX, deltaY: we.deltaY });
         break;
       }
 

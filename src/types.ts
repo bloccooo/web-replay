@@ -3,7 +3,7 @@ export type EventType =
   | "mousemove"
   | "mousedown"
   | "mouseup"
-  | "scroll"
+  | "wheel"
   | "input"
   | "keydown"
   | "keyup";
@@ -38,10 +38,11 @@ export interface MouseButtonEvent extends BaseEvent {
   button: number;
 }
 
-export interface ScrollEvent extends BaseEvent {
-  type: "scroll";
-  scrollX: number;
-  scrollY: number;
+export interface WheelEvent extends BaseEvent {
+  type: "wheel";
+  deltaX: number;
+  deltaY: number;
+  deltaMode: number;
 }
 
 export interface InputEvent extends BaseEvent {
@@ -58,7 +59,7 @@ export type SessionEvent =
   | NavigateEvent
   | MouseMoveEvent
   | MouseButtonEvent
-  | ScrollEvent
+  | WheelEvent
   | InputEvent
   | KeyEvent;
 
