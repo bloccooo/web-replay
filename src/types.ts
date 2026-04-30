@@ -40,6 +40,8 @@ export interface MouseButtonEvent extends BaseEvent {
 
 export interface WheelEvent extends BaseEvent {
   type: "wheel";
+  x: number;
+  y: number;
   deltaX: number;
   deltaY: number;
   deltaMode: number;

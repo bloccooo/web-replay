@@ -51,7 +51,7 @@ export async function record(startUrl: string, outputPath: string, opts: RecordO
       }, { capture: true, passive: true });
 
       document.addEventListener("wheel", (e) => {
-        w.__replayWheel?.({ deltaX: e.deltaX, deltaY: e.deltaY, deltaMode: e.deltaMode });
+        w.__replayWheel?.({ x: e.clientX, y: e.clientY, deltaX: e.deltaX, deltaY: e.deltaY, deltaMode: e.deltaMode });
       }, { capture: true, passive: true });
 
       document.addEventListener("input", (e: Event) => {
@@ -84,8 +84,8 @@ export async function record(startUrl: string, outputPath: string, opts: RecordO
       events.push({ type: "mouseup", x: data.x, y: data.y, button: data.button, t: elapsed(), vw: vp.width, vh: vp.height } as MouseButtonEvent);
     });
 
-    await pg.exposeFunction("__replayWheel", (data: { deltaX: number; deltaY: number; deltaMode: number }) => {
-      events.push({ type: "wheel", deltaX: data.deltaX, deltaY: data.deltaY, deltaMode: data.deltaMode, t: elapsed() } as ReplayWheelEvent);
+    await pg.exposeFunction("__replayWheel", (data: { x: number; y: number; deltaX: number; deltaY: number; deltaMode: number }) => {
+      events.push({ type: "wheel", x: data.x, y: data.y, deltaX: data.deltaX, deltaY: data.deltaY, deltaMode: data.deltaMode, t: elapsed() } as ReplayWheelEvent);
     });
 
     await pg.exposeFunction("__replayInput", (data: { value: string }) => {

@@ -147,7 +147,22 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}): Pro
       case "wheel": {
         await waitUntil(event.t);
         const we = event as ReplayWheelEvent;
-        await page.mouse.wheel({ deltaX: we.deltaX, deltaY: we.deltaY });
+        await page.evaluate(
+          (x: number, y: number, deltaX: number, deltaY: number, deltaMode: number) => {
+            const el = document.elementFromPoint(x, y) ?? document.documentElement;
+            el.dispatchEvent(new WheelEvent("wheel", {
+              bubbles: true,
+              cancelable: true,
+              view: window,
+              clientX: x,
+              clientY: y,
+              deltaX,
+              deltaY,
+              deltaMode,
+            }));
+          },
+          we.x, we.y, we.deltaX, we.deltaY, we.deltaMode
+        );
         break;
       }
 
