@@ -152,7 +152,6 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}): Pro
         const LINE = 40;
         const PAGE = session.viewport.height;
         const scale = we.deltaMode === 1 ? LINE : we.deltaMode === 2 ? PAGE : 1;
-        await page.mouse.move(we.x, we.y);
         await page.mouse.wheel({ deltaX: we.deltaX * scale, deltaY: we.deltaY * scale });
         break;
       }
