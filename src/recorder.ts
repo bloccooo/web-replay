@@ -1,6 +1,6 @@
 import { type Page } from "puppeteer";
 import { writeFileSync } from "fs";
-import type { Session, SessionEvent, MouseButtonEvent, WheelEvent as ReplayWheelEvent } from "./types.js";
+import type { Session, SessionEvent, MouseButtonEvent, WheelEvent as ReplayWheelEvent, ScrollEvent } from "./types.js";
 import { launchBrowser } from "./browser.js";
 
 const MOUSEMOVE_INTERVAL_MS = 32;
@@ -54,6 +54,10 @@ export async function record(startUrl: string, outputPath: string, opts: RecordO
         w.__replayWheel?.({ x: e.clientX, y: e.clientY, deltaX: e.deltaX, deltaY: e.deltaY, deltaMode: e.deltaMode });
       }, { capture: true, passive: true });
 
+      document.addEventListener("scroll", () => {
+        w.__replayScroll?.({ scrollX: window.scrollX, scrollY: window.scrollY });
+      }, { capture: true, passive: true });
+
       document.addEventListener("input", (e: Event) => {
         const target = e.target as HTMLInputElement | null;
         if (!target) return;
@@ -86,6 +90,10 @@ export async function record(startUrl: string, outputPath: string, opts: RecordO
 
     await pg.exposeFunction("__replayWheel", (data: { x: number; y: number; deltaX: number; deltaY: number; deltaMode: number }) => {
       events.push({ type: "wheel", x: data.x, y: data.y, deltaX: data.deltaX, deltaY: data.deltaY, deltaMode: data.deltaMode, t: elapsed() } as ReplayWheelEvent);
+    });
+
+    await pg.exposeFunction("__replayScroll", (data: { scrollX: number; scrollY: number }) => {
+      events.push({ type: "scroll", scrollX: data.scrollX, scrollY: data.scrollY, t: elapsed() } as ScrollEvent);
     });
 
     await pg.exposeFunction("__replayInput", (data: { value: string }) => {
