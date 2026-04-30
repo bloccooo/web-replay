@@ -1,6 +1,6 @@
 import { type Page } from "puppeteer";
 import { writeFileSync } from "fs";
-import type { Session, SessionEvent, MouseButtonEvent, WheelEvent as ReplayWheelEvent } from "./types.js";
+import type { Session, SessionEvent, MouseButtonEvent, WheelEvent as ReplayWheelEvent, ScrollEvent } from "./types.js";
 import { launchBrowser } from "./browser.js";
 
 const MOUSEMOVE_INTERVAL_MS = 32;
@@ -68,6 +68,16 @@ export async function record(startUrl: string, outputPath: string, opts: RecordO
       document.addEventListener("keyup", (e: KeyboardEvent) => {
         w.__replayKeyup?.({ key: e.key });
       }, { capture: true, passive: true });
+
+      document.addEventListener("scroll", (e: Event) => {
+        const target = e.target as EventTarget;
+        if (target === document || target === document.documentElement || target === document.body) {
+          w.__replayScroll?.({ scrollX: window.scrollX, scrollY: window.scrollY, isWindow: true });
+        } else {
+          const el = target as Element;
+          w.__replayScroll?.({ scrollX: el.scrollLeft, scrollY: el.scrollTop, isWindow: false });
+        }
+      }, { capture: true, passive: true });
     });
 
     await pg.exposeFunction("__replayMouseMove", (data: { x: number; y: number }) => {
@@ -99,6 +109,10 @@ export async function record(startUrl: string, outputPath: string, opts: RecordO
 
     await pg.exposeFunction("__replayKeyup", (data: { key: string }) => {
       events.push({ type: "keyup", key: data.key, t: elapsed() });
+    });
+
+    await pg.exposeFunction("__replayScroll", (data: { scrollX: number; scrollY: number; isWindow: boolean }) => {
+      events.push({ type: "scroll", scrollX: data.scrollX, scrollY: data.scrollY, isWindow: data.isWindow, t: elapsed() } as ScrollEvent);
     });
   }
 

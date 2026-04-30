@@ -7,6 +7,7 @@ import type {
   MouseButtonEvent,
   NavigateEvent,
   WheelEvent as ReplayWheelEvent,
+  ScrollEvent,
   InputEvent,
   KeyEvent,
 } from "./types.js";
@@ -66,6 +67,20 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}): Pro
 
   const buttonsDown = new Set<string>();
 
+  // Pre-compute which wheel events are NOT followed by a scroll event within 200ms.
+  // Those are custom handlers (e.g. map zoom) that need page.mouse.wheel().
+  // Plain scrolling is covered by the scroll events via scrollTo().
+  const wheelIsCustomHandler = new Set<number>();
+  for (let i = 0; i < session.events.length; i++) {
+    if (session.events[i]!.type !== "wheel") continue;
+    const wheelT = session.events[i]!.t;
+    let hasFollowingScroll = false;
+    for (let j = i + 1; j < session.events.length && session.events[j]!.t - wheelT < 200; j++) {
+      if (session.events[j]!.type === "scroll") { hasFollowingScroll = true; break; }
+    }
+    if (!hasFollowingScroll) wheelIsCustomHandler.add(i);
+  }
+
   // Wall-clock reference: session time 0 maps to replayStart.
   const replayStart = Date.now();
 
@@ -78,7 +93,8 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}): Pro
     if (remaining > 1) await sleep(remaining);
   }
 
-  for (const event of session.events) {
+  for (let ei = 0; ei < session.events.length; ei++) {
+    const event = session.events[ei]!;
     switch (event.type) {
       case "navigate": {
         await waitUntil(event.t);
@@ -146,11 +162,42 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}): Pro
 
       case "wheel": {
         await waitUntil(event.t);
-        const we = event as ReplayWheelEvent;
-        const LINE = 40;
-        const PAGE = session.viewport.height;
-        const scale = we.deltaMode === 1 ? LINE : we.deltaMode === 2 ? PAGE : 1;
-        await page.mouse.wheel({ deltaX: we.deltaX * scale, deltaY: we.deltaY * scale });
+        if (wheelIsCustomHandler.has(ei)) {
+          const we = event as ReplayWheelEvent;
+          const LINE = 40;
+          const PAGE = session.viewport.height;
+          const scale = we.deltaMode === 1 ? LINE : we.deltaMode === 2 ? PAGE : 1;
+          await page.mouse.wheel({ deltaX: we.deltaX * scale, deltaY: we.deltaY * scale });
+        }
+        break;
+      }
+
+      case "scroll": {
+        await waitUntil(event.t);
+        const se = event as ScrollEvent;
+        if (se.isWindow) {
+          await page.evaluate(
+            (sx: number, sy: number) => window.scrollTo(sx, sy),
+            se.scrollX, se.scrollY,
+          );
+        } else {
+          await page.evaluate(
+            (sx: number, sy: number, cx: number, cy: number) => {
+              let el: Element | null = document.elementFromPoint(cx, cy);
+              while (el && el !== document.documentElement) {
+                const { overflow, overflowX, overflowY } = getComputedStyle(el);
+                const scrollable = overflow + overflowX + overflowY;
+                if ((scrollable.includes("auto") || scrollable.includes("scroll")) &&
+                    (el.scrollHeight > el.clientHeight || el.scrollWidth > el.clientWidth)) {
+                  el.scrollTo(sx, sy);
+                  return;
+                }
+                el = el.parentElement;
+              }
+            },
+            se.scrollX, se.scrollY, cursorX, cursorY,
+          );
+        }
         break;
       }
 
