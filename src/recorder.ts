@@ -54,7 +54,9 @@ export async function record(startUrl: string, outputPath: string, opts: RecordO
         w.__replayWheel?.({ x: e.clientX, y: e.clientY, deltaX: e.deltaX, deltaY: e.deltaY, deltaMode: e.deltaMode });
       }, { capture: true, passive: true });
 
-      document.addEventListener("scroll", () => {
+      document.addEventListener("scroll", (e) => {
+        const target = e.target;
+        if (target !== document && target !== document.documentElement) return;
         w.__replayScroll?.({ scrollX: window.scrollX, scrollY: window.scrollY });
       }, { capture: true, passive: true });
 
