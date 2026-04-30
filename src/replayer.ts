@@ -17,6 +17,7 @@ export interface ReplayOptions {
   speed?: number;
   width?: number;
   height?: number;
+  fullscreen?: boolean;
 }
 
 export async function replay(sessionPath: string, opts: ReplayOptions = {}): Promise<void> {
@@ -27,6 +28,7 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}): Pro
   const { browser, page } = await launchBrowser({
     width: opts.width ?? session.viewport.width,
     height: opts.height ?? session.viewport.height,
+    fullscreen: opts.fullscreen,
   });
 
   async function hideCursor(pg: Page) {

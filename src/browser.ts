@@ -3,6 +3,7 @@ import puppeteer, { type Browser, type Page } from "puppeteer";
 export interface SizeOptions {
   width?: number;
   height?: number;
+  fullscreen?: boolean;
 }
 
 async function measureChromeOverhead(): Promise<{ chromeW: number; chromeH: number }> {
@@ -28,7 +29,9 @@ export async function launchBrowser(opts: SizeOptions): Promise<{ browser: Brows
   const fixedSize = opts.width !== undefined && opts.height !== undefined;
 
   let sizeArgs: string[];
-  if (fixedSize) {
+  if (opts.fullscreen) {
+    sizeArgs = ["--kiosk"];
+  } else if (fixedSize) {
     const { chromeW, chromeH } = await measureChromeOverhead();
     sizeArgs = [`--window-size=${opts.width! + chromeW},${opts.height! + chromeH}`];
   } else {

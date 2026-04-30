@@ -13,11 +13,13 @@ Record options:
   -o, --output <path>              Output file path (default: session.json)
   --width <px>                     Viewport width (default: maximized window)
   --height <px>                    Viewport height (default: maximized window)
+  --fullscreen                     Launch in fullscreen kiosk mode (hides address bar)
 
 Replay options:
   --speed <multiplier>             Playback speed (default: 1.0)
   --width <px>                     Viewport width override
   --height <px>                    Viewport height override
+  --fullscreen                     Launch in fullscreen kiosk mode (hides address bar)
 `);
 }
 
@@ -73,6 +75,7 @@ async function main() {
     const recordOpts: RecordOptions = {
       width: flags["width"] ? parseInt(flags["width"], 10) : undefined,
       height: flags["height"] ? parseInt(flags["height"], 10) : undefined,
+      fullscreen: flags["fullscreen"] === "true",
     };
     await record(url, output, recordOpts);
 
@@ -85,7 +88,8 @@ async function main() {
     const speed = flags["speed"] ? parseFloat(flags["speed"]) : 1.0;
     const width = flags["width"] ? parseInt(flags["width"], 10) : undefined;
     const height = flags["height"] ? parseInt(flags["height"], 10) : undefined;
-    await replay(file, { speed, width, height });
+    const fullscreen = flags["fullscreen"] === "true";
+    await replay(file, { speed, width, height, fullscreen });
 
   } else {
     console.error(`Unknown command: ${command}`);

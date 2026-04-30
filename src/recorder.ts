@@ -8,6 +8,7 @@ const MOUSEMOVE_INTERVAL_MS = 32;
 export interface RecordOptions {
   width?: number;
   height?: number;
+  fullscreen?: boolean;
 }
 
 export async function record(startUrl: string, outputPath: string, opts: RecordOptions = {}): Promise<void> {

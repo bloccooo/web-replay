@@ -2,2321 +2,2177 @@
   "version": 1,
   "startUrl": "http://localhost:5173",
   "viewport": {
-    "width": 1922,
-    "height": 1082
+    "width": 2962,
+    "height": 1666
   },
   "events": [
     {
       "type": "navigate",
       "url": "http://localhost:5173/",
-      "t": 25
+      "t": 23
     },
     {
       "type": "navigate",
       "url": "http://localhost:5173/",
-      "t": 194
+      "t": 191
     },
     {
       "type": "mousemove",
-      "x": 1914,
-      "y": 459,
-      "t": 1883,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2301,
+      "y": 1536,
+      "t": 5374,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1827,
-      "y": 466,
-      "t": 1929,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2308,
+      "y": 1529,
+      "t": 5637,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1794,
-      "y": 466,
-      "t": 1963,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2297,
+      "y": 1488,
+      "t": 5671,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1773,
-      "y": 467,
-      "t": 1997,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2276,
+      "y": 1431,
+      "t": 5704,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1758,
-      "y": 469,
-      "t": 2029,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2260,
+      "y": 1388,
+      "t": 5737,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1743,
-      "y": 473,
-      "t": 2064,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2229,
+      "y": 1322,
+      "t": 5771,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1736,
-      "y": 476,
-      "t": 2096,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2204,
+      "y": 1259,
+      "t": 5804,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1722,
-      "y": 482,
-      "t": 2129,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2188,
+      "y": 1209,
+      "t": 5838,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1712,
-      "y": 486,
-      "t": 2164,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2170,
+      "y": 1157,
+      "t": 5871,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1707,
-      "y": 488,
-      "t": 2197,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2138,
+      "y": 1088,
+      "t": 5905,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1702,
-      "y": 491,
-      "t": 2229,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2125,
+      "y": 1054,
+      "t": 5938,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1695,
-      "y": 493,
-      "t": 2263,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2115,
+      "y": 1023,
+      "t": 5971,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1691,
-      "y": 497,
-      "t": 2296,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2101,
+      "y": 986,
+      "t": 6005,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1688,
-      "y": 500,
-      "t": 2330,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2088,
+      "y": 959,
+      "t": 6037,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1686,
-      "y": 500,
-      "t": 2363,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2078,
+      "y": 933,
+      "t": 6071,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1683,
-      "y": 502,
-      "t": 2397,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2071,
+      "y": 910,
+      "t": 6105,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1679,
-      "y": 506,
-      "t": 2430,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2068,
+      "y": 897,
+      "t": 6137,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 2067,
+      "y": 879,
+      "t": 6170,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 2067,
+      "y": 867,
+      "t": 6204,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 2065,
+      "y": 855,
+      "t": 6237,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 2064,
+      "y": 845,
+      "t": 6271,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 2063,
+      "y": 831,
+      "t": 6304,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 2063,
+      "y": 821,
+      "t": 6337,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 2063,
+      "y": 813,
+      "t": 6371,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 2062,
+      "y": 808,
+      "t": 6404,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 2062,
+      "y": 806,
+      "t": 6437,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 2062,
+      "y": 802,
+      "t": 6471,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 2062,
+      "y": 799,
+      "t": 6504,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousedown",
-      "x": 1678,
-      "y": 506,
+      "x": 2062,
+      "y": 799,
       "button": 0,
-      "t": 2618,
-      "vw": 1922,
-      "vh": 1082
+      "t": 6610,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousedown",
-      "x": 1678,
-      "y": 506,
+      "x": 2062,
+      "y": 799,
       "button": 0,
-      "t": 2618,
-      "vw": 1922,
-      "vh": 1082
+      "t": 6610,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mouseup",
-      "x": 1678,
-      "y": 506,
+      "x": 2062,
+      "y": 799,
       "button": 0,
-      "t": 2696,
-      "vw": 1922,
-      "vh": 1082
+      "t": 6736,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mouseup",
-      "x": 1678,
-      "y": 506,
+      "x": 2062,
+      "y": 799,
       "button": 0,
-      "t": 2696,
-      "vw": 1922,
-      "vh": 1082
+      "t": 6737,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "keydown",
       "key": "p",
-      "t": 3813
+      "t": 8063
     },
     {
       "type": "keydown",
       "key": "p",
-      "t": 3813
+      "t": 8064
     },
     {
       "type": "input",
       "value": "p",
-      "t": 3815
+      "t": 8065
     },
     {
       "type": "input",
       "value": "p",
-      "t": 3815
+      "t": 8065
     },
     {
       "type": "keydown",
       "key": "i",
-      "t": 3894
+      "t": 8121
     },
     {
       "type": "keydown",
       "key": "i",
-      "t": 3894
+      "t": 8121
     },
     {
       "type": "input",
       "value": "pi",
-      "t": 3895
+      "t": 8121
     },
     {
       "type": "input",
       "value": "pi",
-      "t": 3895
+      "t": 8121
     },
     {
       "type": "keyup",
       "key": "p",
-      "t": 3966
+      "t": 8192
     },
     {
       "type": "keyup",
       "key": "p",
-      "t": 3967
+      "t": 8193
     },
     {
       "type": "keydown",
       "key": "e",
-      "t": 3967
+      "t": 8204
     },
     {
       "type": "keydown",
       "key": "e",
-      "t": 3967
+      "t": 8204
     },
     {
       "type": "input",
       "value": "pie",
-      "t": 3967
+      "t": 8205
     },
     {
       "type": "input",
       "value": "pie",
-      "t": 3967
+      "t": 8205
     },
     {
       "type": "keyup",
       "key": "i",
-      "t": 4014
+      "t": 8240
     },
     {
       "type": "keyup",
       "key": "i",
-      "t": 4014
+      "t": 8240
     },
     {
       "type": "keyup",
       "key": "e",
-      "t": 4062
+      "t": 8288
     },
     {
       "type": "keyup",
       "key": "e",
-      "t": 4063
+      "t": 8288
     },
     {
       "type": "keydown",
       "key": "t",
-      "t": 4147
+      "t": 8372
     },
     {
       "type": "keydown",
       "key": "t",
-      "t": 4147
+      "t": 8373
     },
     {
       "type": "input",
       "value": "piet",
-      "t": 4147
+      "t": 8373
     },
     {
       "type": "input",
       "value": "piet",
-      "t": 4147
+      "t": 8373
     },
     {
       "type": "keydown",
       "key": "r",
-      "t": 4218
+      "t": 8444
     },
     {
       "type": "keydown",
       "key": "r",
-      "t": 4219
+      "t": 8445
     },
     {
       "type": "input",
       "value": "pietr",
-      "t": 4219
+      "t": 8445
     },
     {
       "type": "input",
       "value": "pietr",
-      "t": 4219
+      "t": 8445
     },
     {
       "type": "keydown",
       "key": "o",
-      "t": 4326
+      "t": 8492
     },
     {
       "type": "keydown",
       "key": "o",
-      "t": 4327
+      "t": 8492
     },
     {
       "type": "input",
       "value": "pietro",
-      "t": 4327
+      "t": 8493
     },
     {
       "type": "input",
       "value": "pietro",
-      "t": 4327
+      "t": 8493
     },
     {
       "type": "keyup",
       "key": "t",
-      "t": 4328
+      "t": 8530
     },
     {
       "type": "keyup",
       "key": "t",
-      "t": 4328
+      "t": 8530
     },
     {
       "type": "keyup",
       "key": "r",
-      "t": 4374
+      "t": 8564
     },
     {
       "type": "keyup",
       "key": "r",
-      "t": 4374
+      "t": 8564
     },
     {
       "type": "keyup",
       "key": "o",
-      "t": 4422
+      "t": 8588
     },
     {
       "type": "keyup",
       "key": "o",
-      "t": 4422
+      "t": 8588
+    },
+    {
+      "type": "keydown",
+      "key": "AltGraph",
+      "t": 8745
+    },
+    {
+      "type": "keydown",
+      "key": "AltGraph",
+      "t": 8745
+    },
+    {
+      "type": "keydown",
+      "key": "@",
+      "t": 8864
+    },
+    {
+      "type": "keydown",
+      "key": "@",
+      "t": 8865
+    },
+    {
+      "type": "input",
+      "value": "pietro@",
+      "t": 8865
+    },
+    {
+      "type": "input",
+      "value": "pietro@",
+      "t": 8865
+    },
+    {
+      "type": "keyup",
+      "key": "@",
+      "t": 8972
+    },
+    {
+      "type": "keyup",
+      "key": "@",
+      "t": 8972
+    },
+    {
+      "type": "keyup",
+      "key": "AltGraph",
+      "t": 9128
+    },
+    {
+      "type": "keyup",
+      "key": "AltGraph",
+      "t": 9129
+    },
+    {
+      "type": "keydown",
+      "key": "p",
+      "t": 9584
+    },
+    {
+      "type": "keydown",
+      "key": "p",
+      "t": 9585
+    },
+    {
+      "type": "input",
+      "value": "pietro@p",
+      "t": 9585
+    },
+    {
+      "type": "input",
+      "value": "pietro@p",
+      "t": 9585
+    },
+    {
+      "type": "keydown",
+      "key": "i",
+      "t": 9633
+    },
+    {
+      "type": "keydown",
+      "key": "i",
+      "t": 9633
+    },
+    {
+      "type": "input",
+      "value": "pietro@pi",
+      "t": 9635
+    },
+    {
+      "type": "input",
+      "value": "pietro@pi",
+      "t": 9635
+    },
+    {
+      "type": "keydown",
+      "key": "e",
+      "t": 9704
+    },
+    {
+      "type": "keydown",
+      "key": "e",
+      "t": 9705
+    },
+    {
+      "type": "input",
+      "value": "pietro@pie",
+      "t": 9705
+    },
+    {
+      "type": "input",
+      "value": "pietro@pie",
+      "t": 9705
+    },
+    {
+      "type": "keyup",
+      "key": "p",
+      "t": 9706
+    },
+    {
+      "type": "keyup",
+      "key": "p",
+      "t": 9706
+    },
+    {
+      "type": "keyup",
+      "key": "i",
+      "t": 9740
+    },
+    {
+      "type": "keyup",
+      "key": "i",
+      "t": 9740
+    },
+    {
+      "type": "keyup",
+      "key": "e",
+      "t": 9776
+    },
+    {
+      "type": "keyup",
+      "key": "e",
+      "t": 9776
+    },
+    {
+      "type": "keydown",
+      "key": "t",
+      "t": 9860
+    },
+    {
+      "type": "keydown",
+      "key": "t",
+      "t": 9861
+    },
+    {
+      "type": "input",
+      "value": "pietro@piet",
+      "t": 9861
+    },
+    {
+      "type": "input",
+      "value": "pietro@piet",
+      "t": 9861
+    },
+    {
+      "type": "keydown",
+      "key": "r",
+      "t": 9932
+    },
+    {
+      "type": "keydown",
+      "key": "r",
+      "t": 9933
+    },
+    {
+      "type": "input",
+      "value": "pietro@pietr",
+      "t": 9933
+    },
+    {
+      "type": "input",
+      "value": "pietro@pietr",
+      "t": 9933
+    },
+    {
+      "type": "keydown",
+      "key": "o",
+      "t": 9956
+    },
+    {
+      "type": "keydown",
+      "key": "o",
+      "t": 9957
+    },
+    {
+      "type": "input",
+      "value": "pietro@pietro",
+      "t": 9957
+    },
+    {
+      "type": "input",
+      "value": "pietro@pietro",
+      "t": 9957
+    },
+    {
+      "type": "keyup",
+      "key": "t",
+      "t": 9968
+    },
+    {
+      "type": "keyup",
+      "key": "t",
+      "t": 9968
+    },
+    {
+      "type": "keyup",
+      "key": "r",
+      "t": 10004
+    },
+    {
+      "type": "keyup",
+      "key": "r",
+      "t": 10004
+    },
+    {
+      "type": "keyup",
+      "key": "o",
+      "t": 10040
+    },
+    {
+      "type": "keyup",
+      "key": "o",
+      "t": 10040
+    },
+    {
+      "type": "keydown",
+      "key": "a",
+      "t": 10101
+    },
+    {
+      "type": "keydown",
+      "key": "a",
+      "t": 10101
+    },
+    {
+      "type": "input",
+      "value": "pietro@pietroa",
+      "t": 10101
+    },
+    {
+      "type": "input",
+      "value": "pietro@pietroa",
+      "t": 10101
+    },
+    {
+      "type": "keydown",
+      "key": "l",
+      "t": 10172
+    },
+    {
+      "type": "keydown",
+      "key": "l",
+      "t": 10172
+    },
+    {
+      "type": "input",
+      "value": "pietro@pietroal",
+      "t": 10173
+    },
+    {
+      "type": "input",
+      "value": "pietro@pietroal",
+      "t": 10173
+    },
+    {
+      "type": "keyup",
+      "key": "a",
+      "t": 10208
+    },
+    {
+      "type": "keyup",
+      "key": "a",
+      "t": 10208
+    },
+    {
+      "type": "keyup",
+      "key": "l",
+      "t": 10256
+    },
+    {
+      "type": "keyup",
+      "key": "l",
+      "t": 10256
+    },
+    {
+      "type": "keydown",
+      "key": "b",
+      "t": 10316
+    },
+    {
+      "type": "keydown",
+      "key": "b",
+      "t": 10317
+    },
+    {
+      "type": "input",
+      "value": "pietro@pietroalb",
+      "t": 10317
+    },
+    {
+      "type": "input",
+      "value": "pietro@pietroalb",
+      "t": 10317
+    },
+    {
+      "type": "keydown",
+      "key": "e",
+      "t": 10400
+    },
+    {
+      "type": "keydown",
+      "key": "e",
+      "t": 10401
+    },
+    {
+      "type": "input",
+      "value": "pietro@pietroalbe",
+      "t": 10401
+    },
+    {
+      "type": "input",
+      "value": "pietro@pietroalbe",
+      "t": 10401
+    },
+    {
+      "type": "keyup",
+      "key": "b",
+      "t": 10412
+    },
+    {
+      "type": "keyup",
+      "key": "b",
+      "t": 10412
+    },
+    {
+      "type": "keyup",
+      "key": "e",
+      "t": 10496
+    },
+    {
+      "type": "keyup",
+      "key": "e",
+      "t": 10496
+    },
+    {
+      "type": "keydown",
+      "key": "r",
+      "t": 10556
+    },
+    {
+      "type": "keydown",
+      "key": "r",
+      "t": 10557
+    },
+    {
+      "type": "input",
+      "value": "pietro@pietroalber",
+      "t": 10557
+    },
+    {
+      "type": "input",
+      "value": "pietro@pietroalber",
+      "t": 10557
+    },
+    {
+      "type": "keyup",
+      "key": "r",
+      "t": 10640
+    },
+    {
+      "type": "keyup",
+      "key": "r",
+      "t": 10640
+    },
+    {
+      "type": "keydown",
+      "key": "t",
+      "t": 10688
+    },
+    {
+      "type": "keydown",
+      "key": "t",
+      "t": 10689
+    },
+    {
+      "type": "input",
+      "value": "pietro@pietroalbert",
+      "t": 10689
+    },
+    {
+      "type": "input",
+      "value": "pietro@pietroalbert",
+      "t": 10689
+    },
+    {
+      "type": "keydown",
+      "key": "i",
+      "t": 10737
+    },
+    {
+      "type": "keydown",
+      "key": "i",
+      "t": 10737
+    },
+    {
+      "type": "input",
+      "value": "pietro@pietroalberti",
+      "t": 10737
+    },
+    {
+      "type": "input",
+      "value": "pietro@pietroalberti",
+      "t": 10738
+    },
+    {
+      "type": "keyup",
+      "key": "t",
+      "t": 10772
+    },
+    {
+      "type": "keyup",
+      "key": "t",
+      "t": 10772
+    },
+    {
+      "type": "keyup",
+      "key": "i",
+      "t": 10796
+    },
+    {
+      "type": "keyup",
+      "key": "i",
+      "t": 10796
+    },
+    {
+      "type": "keydown",
+      "key": ".",
+      "t": 10892
+    },
+    {
+      "type": "keydown",
+      "key": ".",
+      "t": 10893
+    },
+    {
+      "type": "input",
+      "value": "pietro@pietroalberti.",
+      "t": 10893
+    },
+    {
+      "type": "input",
+      "value": "pietro@pietroalberti.",
+      "t": 10893
+    },
+    {
+      "type": "keydown",
+      "key": "c",
+      "t": 10976
+    },
+    {
+      "type": "keydown",
+      "key": "c",
+      "t": 10977
+    },
+    {
+      "type": "input",
+      "value": "pietro@pietroalberti.c",
+      "t": 10977
+    },
+    {
+      "type": "input",
+      "value": "pietro@pietroalberti.c",
+      "t": 10977
+    },
+    {
+      "type": "keyup",
+      "key": ".",
+      "t": 10989
+    },
+    {
+      "type": "keyup",
+      "key": ".",
+      "t": 10989
+    },
+    {
+      "type": "keyup",
+      "key": "c",
+      "t": 11060
+    },
+    {
+      "type": "keyup",
+      "key": "c",
+      "t": 11060
+    },
+    {
+      "type": "keydown",
+      "key": "h",
+      "t": 11084
+    },
+    {
+      "type": "keydown",
+      "key": "h",
+      "t": 11085
+    },
+    {
+      "type": "input",
+      "value": "pietro@pietroalberti.ch",
+      "t": 11085
+    },
+    {
+      "type": "input",
+      "value": "pietro@pietroalberti.ch",
+      "t": 11085
+    },
+    {
+      "type": "keyup",
+      "key": "h",
+      "t": 11180
+    },
+    {
+      "type": "keyup",
+      "key": "h",
+      "t": 11180
+    },
+    {
+      "type": "keydown",
+      "key": "Tab",
+      "t": 11708
+    },
+    {
+      "type": "keydown",
+      "key": "Tab",
+      "t": 11708
+    },
+    {
+      "type": "keyup",
+      "key": "Tab",
+      "t": 11804
+    },
+    {
+      "type": "keyup",
+      "key": "Tab",
+      "t": 11804
+    },
+    {
+      "type": "keydown",
+      "key": "t",
+      "t": 12752
+    },
+    {
+      "type": "keydown",
+      "key": "t",
+      "t": 12753
+    },
+    {
+      "type": "input",
+      "value": "t",
+      "t": 12754
+    },
+    {
+      "type": "input",
+      "value": "t",
+      "t": 12754
+    },
+    {
+      "type": "keydown",
+      "key": "e",
+      "t": 12812
+    },
+    {
+      "type": "keydown",
+      "key": "e",
+      "t": 12813
+    },
+    {
+      "type": "input",
+      "value": "te",
+      "t": 12813
+    },
+    {
+      "type": "input",
+      "value": "te",
+      "t": 12813
+    },
+    {
+      "type": "keyup",
+      "key": "t",
+      "t": 12836
+    },
+    {
+      "type": "keyup",
+      "key": "t",
+      "t": 12836
+    },
+    {
+      "type": "keyup",
+      "key": "e",
+      "t": 12908
+    },
+    {
+      "type": "keyup",
+      "key": "e",
+      "t": 12908
+    },
+    {
+      "type": "keydown",
+      "key": "s",
+      "t": 12956
+    },
+    {
+      "type": "keydown",
+      "key": "s",
+      "t": 12956
+    },
+    {
+      "type": "input",
+      "value": "tes",
+      "t": 12957
+    },
+    {
+      "type": "input",
+      "value": "tes",
+      "t": 12957
+    },
+    {
+      "type": "keydown",
+      "key": "a",
+      "t": 12968
+    },
+    {
+      "type": "keydown",
+      "key": "a",
+      "t": 12968
+    },
+    {
+      "type": "input",
+      "value": "tesa",
+      "t": 12969
+    },
+    {
+      "type": "input",
+      "value": "tesa",
+      "t": 12969
+    },
+    {
+      "type": "keyup",
+      "key": "s",
+      "t": 13064
+    },
+    {
+      "type": "keyup",
+      "key": "s",
+      "t": 13064
+    },
+    {
+      "type": "keydown",
+      "key": "t",
+      "t": 13064
+    },
+    {
+      "type": "keydown",
+      "key": "t",
+      "t": 13065
+    },
+    {
+      "type": "input",
+      "value": "tesat",
+      "t": 13065
+    },
+    {
+      "type": "input",
+      "value": "tesat",
+      "t": 13065
+    },
+    {
+      "type": "keyup",
+      "key": "a",
+      "t": 13101
+    },
+    {
+      "type": "keyup",
+      "key": "a",
+      "t": 13102
+    },
+    {
+      "type": "keyup",
+      "key": "t",
+      "t": 13136
+    },
+    {
+      "type": "keyup",
+      "key": "t",
+      "t": 13136
+    },
+    {
+      "type": "keydown",
+      "key": "j",
+      "t": 13208
+    },
+    {
+      "type": "keydown",
+      "key": "j",
+      "t": 13208
+    },
+    {
+      "type": "input",
+      "value": "tesatj",
+      "t": 13209
+    },
+    {
+      "type": "input",
+      "value": "tesatj",
+      "t": 13209
+    },
+    {
+      "type": "keydown",
+      "key": "h",
+      "t": 13245
+    },
+    {
+      "type": "keydown",
+      "key": "h",
+      "t": 13245
+    },
+    {
+      "type": "input",
+      "value": "tesatjh",
+      "t": 13245
+    },
+    {
+      "type": "input",
+      "value": "tesatjh",
+      "t": 13245
+    },
+    {
+      "type": "keydown",
+      "key": "g",
+      "t": 13256
+    },
+    {
+      "type": "keydown",
+      "key": "g",
+      "t": 13257
+    },
+    {
+      "type": "input",
+      "value": "tesatjhg",
+      "t": 13257
+    },
+    {
+      "type": "input",
+      "value": "tesatjhg",
+      "t": 13257
+    },
+    {
+      "type": "keydown",
+      "key": "a",
+      "t": 13292
+    },
+    {
+      "type": "keydown",
+      "key": "a",
+      "t": 13292
+    },
+    {
+      "type": "input",
+      "value": "tesatjhga",
+      "t": 13294
+    },
+    {
+      "type": "input",
+      "value": "tesatjhga",
+      "t": 13294
+    },
+    {
+      "type": "keydown",
+      "key": "d",
+      "t": 13328
+    },
+    {
+      "type": "keydown",
+      "key": "d",
+      "t": 13328
+    },
+    {
+      "type": "input",
+      "value": "tesatjhgad",
+      "t": 13329
+    },
+    {
+      "type": "input",
+      "value": "tesatjhgad",
+      "t": 13329
+    },
+    {
+      "type": "keyup",
+      "key": "j",
+      "t": 13352
+    },
+    {
+      "type": "keyup",
+      "key": "j",
+      "t": 13353
+    },
+    {
+      "type": "keydown",
+      "key": "f",
+      "t": 13353
+    },
+    {
+      "type": "keydown",
+      "key": "f",
+      "t": 13353
+    },
+    {
+      "type": "input",
+      "value": "tesatjhgadf",
+      "t": 13354
+    },
+    {
+      "type": "input",
+      "value": "tesatjhgadf",
+      "t": 13354
+    },
+    {
+      "type": "keyup",
+      "key": "h",
+      "t": 13354
+    },
+    {
+      "type": "keyup",
+      "key": "h",
+      "t": 13354
+    },
+    {
+      "type": "keyup",
+      "key": "a",
+      "t": 13388
+    },
+    {
+      "type": "keyup",
+      "key": "a",
+      "t": 13388
+    },
+    {
+      "type": "keyup",
+      "key": "g",
+      "t": 13400
+    },
+    {
+      "type": "keyup",
+      "key": "g",
+      "t": 13400
+    },
+    {
+      "type": "keydown",
+      "key": "k",
+      "t": 13436
+    },
+    {
+      "type": "keydown",
+      "key": "k",
+      "t": 13437
+    },
+    {
+      "type": "input",
+      "value": "tesatjhgadfk",
+      "t": 13437
+    },
+    {
+      "type": "input",
+      "value": "tesatjhgadfk",
+      "t": 13437
+    },
+    {
+      "type": "keydown",
+      "key": "j",
+      "t": 13438
+    },
+    {
+      "type": "keydown",
+      "key": "j",
+      "t": 13438
+    },
+    {
+      "type": "input",
+      "value": "tesatjhgadfkj",
+      "t": 13438
+    },
+    {
+      "type": "input",
+      "value": "tesatjhgadfkj",
+      "t": 13438
+    },
+    {
+      "type": "keyup",
+      "key": "d",
+      "t": 13448
+    },
+    {
+      "type": "keyup",
+      "key": "d",
+      "t": 13448
+    },
+    {
+      "type": "keydown",
+      "key": "a",
+      "t": 13484
+    },
+    {
+      "type": "keydown",
+      "key": "a",
+      "t": 13485
+    },
+    {
+      "type": "input",
+      "value": "tesatjhgadfkja",
+      "t": 13486
+    },
+    {
+      "type": "input",
+      "value": "tesatjhgadfkja",
+      "t": 13486
+    },
+    {
+      "type": "keydown",
+      "key": "h",
+      "t": 13496
+    },
+    {
+      "type": "keydown",
+      "key": "h",
+      "t": 13497
+    },
+    {
+      "type": "input",
+      "value": "tesatjhgadfkjah",
+      "t": 13497
+    },
+    {
+      "type": "input",
+      "value": "tesatjhgadfkjah",
+      "t": 13497
+    },
+    {
+      "type": "keydown",
+      "key": "s",
+      "t": 13497
+    },
+    {
+      "type": "keydown",
+      "key": "s",
+      "t": 13498
+    },
+    {
+      "type": "input",
+      "value": "tesatjhgadfkjahs",
+      "t": 13498
+    },
+    {
+      "type": "input",
+      "value": "tesatjhgadfkjahs",
+      "t": 13498
+    },
+    {
+      "type": "keyup",
+      "key": "f",
+      "t": 13508
+    },
+    {
+      "type": "keyup",
+      "key": "f",
+      "t": 13508
+    },
+    {
+      "type": "keydown",
+      "key": "g",
+      "t": 13520
+    },
+    {
+      "type": "keydown",
+      "key": "g",
+      "t": 13521
+    },
+    {
+      "type": "input",
+      "value": "tesatjhgadfkjahsg",
+      "t": 13521
+    },
+    {
+      "type": "input",
+      "value": "tesatjhgadfkjahsg",
+      "t": 13521
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "t": 13522
+    },
+    {
+      "type": "keyup",
+      "key": "k",
+      "t": 13522
+    },
+    {
+      "type": "keyup",
+      "key": "h",
+      "t": 13544
+    },
+    {
+      "type": "keyup",
+      "key": "h",
+      "t": 13544
+    },
+    {
+      "type": "keyup",
+      "key": "j",
+      "t": 13556
+    },
+    {
+      "type": "keyup",
+      "key": "j",
+      "t": 13556
+    },
+    {
+      "type": "keydown",
+      "key": "d",
+      "t": 13556
+    },
+    {
+      "type": "keydown",
+      "key": "d",
+      "t": 13557
+    },
+    {
+      "type": "input",
+      "value": "tesatjhgadfkjahsgd",
+      "t": 13557
+    },
+    {
+      "type": "input",
+      "value": "tesatjhgadfkjahsgd",
+      "t": 13557
+    },
+    {
+      "type": "keydown",
+      "key": "f",
+      "t": 13580
+    },
+    {
+      "type": "keydown",
+      "key": "f",
+      "t": 13580
+    },
+    {
+      "type": "input",
+      "value": "tesatjhgadfkjahsgdf",
+      "t": 13581
+    },
+    {
+      "type": "input",
+      "value": "tesatjhgadfkjahsgdf",
+      "t": 13581
+    },
+    {
+      "type": "keyup",
+      "key": "g",
+      "t": 13592
+    },
+    {
+      "type": "keyup",
+      "key": "g",
+      "t": 13592
+    },
+    {
+      "type": "keyup",
+      "key": "a",
+      "t": 13616
+    },
+    {
+      "type": "keyup",
+      "key": "a",
+      "t": 13616
+    },
+    {
+      "type": "keyup",
+      "key": "s",
+      "t": 13628
+    },
+    {
+      "type": "keyup",
+      "key": "s",
+      "t": 13628
+    },
+    {
+      "type": "keyup",
+      "key": "d",
+      "t": 13748
+    },
+    {
+      "type": "keyup",
+      "key": "d",
+      "t": 13748
+    },
+    {
+      "type": "keyup",
+      "key": "f",
+      "t": 13749
+    },
+    {
+      "type": "keyup",
+      "key": "f",
+      "t": 13749
     },
     {
       "type": "mousemove",
-      "x": 1678,
-      "y": 507,
-      "t": 5130,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2059,
+      "y": 806,
+      "t": 14304,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1675,
-      "y": 512,
-      "t": 5163,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2055,
+      "y": 819,
+      "t": 14338,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1673,
-      "y": 525,
-      "t": 5197,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2047,
+      "y": 842,
+      "t": 14371,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1673,
-      "y": 537,
-      "t": 5230,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2044,
+      "y": 855,
+      "t": 14405,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1672,
-      "y": 543,
-      "t": 5263,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2044,
+      "y": 858,
+      "t": 14438,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1671,
-      "y": 546,
-      "t": 5297,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2044,
+      "y": 863,
+      "t": 14472,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1670,
-      "y": 547,
-      "t": 5330,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2042,
+      "y": 873,
+      "t": 14504,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1669,
-      "y": 551,
-      "t": 5363,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2042,
+      "y": 878,
+      "t": 14537,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1668,
-      "y": 555,
-      "t": 5397,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2041,
+      "y": 888,
+      "t": 14571,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1668,
-      "y": 557,
-      "t": 5430,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2041,
+      "y": 904,
+      "t": 14604,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1666,
-      "y": 564,
-      "t": 5464,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2041,
+      "y": 912,
+      "t": 14638,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1665,
-      "y": 567,
-      "t": 5496,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2041,
+      "y": 917,
+      "t": 14671,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1663,
-      "y": 572,
-      "t": 5530,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2040,
+      "y": 929,
+      "t": 14704,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1662,
-      "y": 574,
-      "t": 5564,
-      "vw": 1922,
-      "vh": 1082
+      "x": 2040,
+      "y": 937,
+      "t": 14739,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1662,
+      "x": 2038,
+      "y": 946,
+      "t": 14771,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 2037,
+      "y": 953,
+      "t": 14805,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 2037,
+      "y": 955,
+      "t": 14854,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 2037,
+      "y": 955,
+      "t": 15038,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 2036,
+      "y": 949,
+      "t": 15071,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 2036,
+      "y": 945,
+      "t": 15104,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 2036,
+      "y": 943,
+      "t": 15138,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 2036,
+      "y": 943,
+      "t": 15171,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousedown",
+      "x": 2036,
+      "y": 943,
+      "button": 0,
+      "t": 15321,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousedown",
+      "x": 2036,
+      "y": 943,
+      "button": 0,
+      "t": 15321,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mouseup",
+      "x": 2036,
+      "y": 943,
+      "button": 0,
+      "t": 15416,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mouseup",
+      "x": 2036,
+      "y": 943,
+      "button": 0,
+      "t": 15416,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "navigate",
+      "url": "http://localhost:5173/",
+      "t": 16444
+    },
+    {
+      "type": "mousemove",
+      "x": 2035,
+      "y": 939,
+      "t": 17838,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 2039,
+      "y": 936,
+      "t": 17872,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 2039,
+      "y": 937,
+      "t": 18205,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 2037,
+      "y": 936,
+      "t": 18254,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 2006,
+      "y": 916,
+      "t": 18287,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 1932,
+      "y": 883,
+      "t": 18321,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 1855,
+      "y": 855,
+      "t": 18355,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 1734,
+      "y": 815,
+      "t": 18387,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 1623,
+      "y": 784,
+      "t": 18421,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 1485,
+      "y": 744,
+      "t": 18454,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 1360,
+      "y": 707,
+      "t": 18488,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 1207,
+      "y": 652,
+      "t": 18521,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 1102,
+      "y": 610,
+      "t": 18554,
+      "vw": 2962,
+      "vh": 1666
+    },
+    {
+      "type": "mousemove",
+      "x": 1023,
       "y": 576,
-      "t": 5630,
-      "vw": 1922,
-      "vh": 1082
+      "t": 18588,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1662,
-      "y": 577,
-      "t": 5680,
-      "vw": 1922,
-      "vh": 1082
+      "x": 940,
+      "y": 541,
+      "t": 18621,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1662,
-      "y": 577,
-      "t": 5797,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousedown",
-      "x": 1662,
-      "y": 577,
-      "button": 0,
-      "t": 5824,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousedown",
-      "x": 1662,
-      "y": 577,
-      "button": 0,
-      "t": 5824,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mouseup",
-      "x": 1662,
-      "y": 577,
-      "button": 0,
-      "t": 5991,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mouseup",
-      "x": 1662,
-      "y": 577,
-      "button": 0,
-      "t": 5991,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "keydown",
-      "key": "t",
-      "t": 6870
-    },
-    {
-      "type": "keydown",
-      "key": "t",
-      "t": 6871
-    },
-    {
-      "type": "input",
-      "value": "t",
-      "t": 6872
-    },
-    {
-      "type": "input",
-      "value": "t",
-      "t": 6872
-    },
-    {
-      "type": "keyup",
-      "key": "t",
-      "t": 6954
-    },
-    {
-      "type": "keyup",
-      "key": "t",
-      "t": 6954
-    },
-    {
-      "type": "keydown",
-      "key": "e",
-      "t": 6955
-    },
-    {
-      "type": "keydown",
-      "key": "e",
-      "t": 6955
-    },
-    {
-      "type": "input",
-      "value": "te",
-      "t": 6955
-    },
-    {
-      "type": "input",
-      "value": "te",
-      "t": 6955
-    },
-    {
-      "type": "keyup",
-      "key": "e",
-      "t": 7038
-    },
-    {
-      "type": "keyup",
-      "key": "e",
-      "t": 7038
-    },
-    {
-      "type": "keydown",
-      "key": "s",
-      "t": 7086
-    },
-    {
-      "type": "keydown",
-      "key": "s",
-      "t": 7086
-    },
-    {
-      "type": "input",
-      "value": "tes",
-      "t": 7087
-    },
-    {
-      "type": "input",
-      "value": "tes",
-      "t": 7087
-    },
-    {
-      "type": "keyup",
-      "key": "s",
-      "t": 7182
-    },
-    {
-      "type": "keyup",
-      "key": "s",
-      "t": 7182
-    },
-    {
-      "type": "keydown",
-      "key": "t",
-      "t": 7194
-    },
-    {
-      "type": "keydown",
-      "key": "t",
-      "t": 7194
-    },
-    {
-      "type": "input",
-      "value": "test",
-      "t": 7195
-    },
-    {
-      "type": "input",
-      "value": "test",
-      "t": 7195
-    },
-    {
-      "type": "keyup",
-      "key": "t",
-      "t": 7278
-    },
-    {
-      "type": "keyup",
-      "key": "t",
-      "t": 7278
-    },
-    {
-      "type": "keydown",
-      "key": "1",
-      "t": 7362
-    },
-    {
-      "type": "keydown",
-      "key": "1",
-      "t": 7363
-    },
-    {
-      "type": "input",
-      "value": "test1",
-      "t": 7363
-    },
-    {
-      "type": "input",
-      "value": "test1",
-      "t": 7363
-    },
-    {
-      "type": "keydown",
-      "key": "2",
-      "t": 7434
-    },
-    {
-      "type": "keydown",
-      "key": "2",
-      "t": 7434
-    },
-    {
-      "type": "input",
-      "value": "test12",
-      "t": 7435
-    },
-    {
-      "type": "input",
-      "value": "test12",
-      "t": 7435
-    },
-    {
-      "type": "keyup",
-      "key": "1",
-      "t": 7518
-    },
-    {
-      "type": "keyup",
-      "key": "1",
-      "t": 7518
-    },
-    {
-      "type": "keyup",
-      "key": "2",
-      "t": 7566
-    },
-    {
-      "type": "keyup",
-      "key": "2",
-      "t": 7566
-    },
-    {
-      "type": "keydown",
-      "key": "3",
-      "t": 7650
-    },
-    {
-      "type": "keydown",
-      "key": "3",
-      "t": 7650
-    },
-    {
-      "type": "input",
-      "value": "test123",
-      "t": 7651
-    },
-    {
-      "type": "input",
-      "value": "test123",
-      "t": 7651
-    },
-    {
-      "type": "keyup",
-      "key": "3",
-      "t": 7734
-    },
-    {
-      "type": "keyup",
-      "key": "3",
-      "t": 7734
-    },
-    {
-      "type": "keydown",
-      "key": "4",
-      "t": 7842
-    },
-    {
-      "type": "keydown",
-      "key": "4",
-      "t": 7842
-    },
-    {
-      "type": "input",
-      "value": "test1234",
-      "t": 7843
-    },
-    {
-      "type": "input",
-      "value": "test1234",
-      "t": 7843
-    },
-    {
-      "type": "keyup",
-      "key": "4",
-      "t": 7938
-    },
-    {
-      "type": "keyup",
-      "key": "4",
-      "t": 7938
+      "x": 862,
+      "y": 506,
+      "t": 18654,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1662,
-      "y": 577,
-      "t": 8430,
-      "vw": 1922,
-      "vh": 1082
+      "x": 798,
+      "y": 474,
+      "t": 18688,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1658,
-      "y": 587,
-      "t": 8463,
-      "vw": 1922,
-      "vh": 1082
+      "x": 717,
+      "y": 432,
+      "t": 18722,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1657,
-      "y": 599,
-      "t": 8497,
-      "vw": 1922,
-      "vh": 1082
+      "x": 672,
+      "y": 406,
+      "t": 18754,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1656,
-      "y": 602,
-      "t": 8530,
-      "vw": 1922,
-      "vh": 1082
+      "x": 619,
+      "y": 367,
+      "t": 18787,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1656,
-      "y": 604,
-      "t": 8563,
-      "vw": 1922,
-      "vh": 1082
+      "x": 576,
+      "y": 333,
+      "t": 18821,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1655,
-      "y": 604,
-      "t": 8597,
-      "vw": 1922,
-      "vh": 1082
+      "x": 543,
+      "y": 309,
+      "t": 18855,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1654,
-      "y": 608,
-      "t": 8630,
-      "vw": 1922,
-      "vh": 1082
+      "x": 508,
+      "y": 282,
+      "t": 18887,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1653,
-      "y": 613,
-      "t": 8663,
-      "vw": 1922,
-      "vh": 1082
+      "x": 472,
+      "y": 245,
+      "t": 18921,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1652,
-      "y": 618,
-      "t": 8696,
-      "vw": 1922,
-      "vh": 1082
+      "x": 451,
+      "y": 225,
+      "t": 18955,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1649,
-      "y": 624,
-      "t": 8730,
-      "vw": 1922,
-      "vh": 1082
+      "x": 434,
+      "y": 208,
+      "t": 18988,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1648,
-      "y": 629,
-      "t": 8763,
-      "vw": 1922,
-      "vh": 1082
+      "x": 428,
+      "y": 203,
+      "t": 19021,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1647,
-      "y": 632,
-      "t": 8798,
-      "vw": 1922,
-      "vh": 1082
+      "x": 424,
+      "y": 198,
+      "t": 19055,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1646,
-      "y": 633,
-      "t": 8830,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1645,
-      "y": 636,
-      "t": 8865,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1645,
-      "y": 638,
-      "t": 8897,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1644,
-      "y": 639,
-      "t": 8929,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1643,
-      "y": 639,
-      "t": 8997,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1642,
-      "y": 641,
-      "t": 9029,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1641,
-      "y": 641,
-      "t": 9063,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousedown",
-      "x": 1641,
-      "y": 641,
-      "button": 0,
-      "t": 9287,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousedown",
-      "x": 1641,
-      "y": 641,
-      "button": 0,
-      "t": 9288,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mouseup",
-      "x": 1641,
-      "y": 641,
-      "button": 0,
-      "t": 9391,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mouseup",
-      "x": 1641,
-      "y": 641,
-      "button": 0,
-      "t": 9391,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1641,
-      "y": 640,
-      "t": 10917,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1641,
-      "y": 630,
-      "t": 10978,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "keydown",
-      "key": "AltGraph",
-      "t": 11755
-    },
-    {
-      "type": "keydown",
-      "key": "AltGraph",
-      "t": 11756
-    },
-    {
-      "type": "keydown",
-      "key": "@",
-      "t": 11922
-    },
-    {
-      "type": "keydown",
-      "key": "@",
-      "t": 11923
-    },
-    {
-      "type": "input",
-      "value": "pietro@",
-      "t": 11923
-    },
-    {
-      "type": "input",
-      "value": "pietro@",
-      "t": 11923
-    },
-    {
-      "type": "keyup",
-      "key": "@",
-      "t": 12030
-    },
-    {
-      "type": "keyup",
-      "key": "@",
-      "t": 12030
-    },
-    {
-      "type": "keyup",
-      "key": "AltGraph",
-      "t": 12210
-    },
-    {
-      "type": "keyup",
-      "key": "AltGraph",
-      "t": 12210
-    },
-    {
-      "type": "keydown",
-      "key": "p",
-      "t": 12882
-    },
-    {
-      "type": "keydown",
-      "key": "p",
-      "t": 12883
-    },
-    {
-      "type": "input",
-      "value": "pietro@p",
-      "t": 12883
-    },
-    {
-      "type": "input",
-      "value": "pietro@p",
-      "t": 12883
-    },
-    {
-      "type": "keydown",
-      "key": "i",
-      "t": 12930
-    },
-    {
-      "type": "keydown",
-      "key": "i",
-      "t": 12931
-    },
-    {
-      "type": "input",
-      "value": "pietro@pi",
-      "t": 12931
-    },
-    {
-      "type": "input",
-      "value": "pietro@pi",
-      "t": 12933
-    },
-    {
-      "type": "keydown",
-      "key": "e",
-      "t": 12980
-    },
-    {
-      "type": "keydown",
-      "key": "e",
-      "t": 12980
-    },
-    {
-      "type": "input",
-      "value": "pietro@pie",
-      "t": 12980
-    },
-    {
-      "type": "input",
-      "value": "pietro@pie",
-      "t": 12981
-    },
-    {
-      "type": "keyup",
-      "key": "p",
-      "t": 12990
-    },
-    {
-      "type": "keyup",
-      "key": "p",
-      "t": 12990
-    },
-    {
-      "type": "keyup",
-      "key": "i",
-      "t": 13038
-    },
-    {
-      "type": "keyup",
-      "key": "i",
-      "t": 13038
-    },
-    {
-      "type": "keyup",
-      "key": "e",
-      "t": 13050
-    },
-    {
-      "type": "keyup",
-      "key": "e",
-      "t": 13050
-    },
-    {
-      "type": "keydown",
-      "key": "t",
-      "t": 13134
-    },
-    {
-      "type": "keydown",
-      "key": "t",
-      "t": 13134
-    },
-    {
-      "type": "input",
-      "value": "pietro@piet",
-      "t": 13135
-    },
-    {
-      "type": "input",
-      "value": "pietro@piet",
-      "t": 13135
-    },
-    {
-      "type": "keydown",
-      "key": "r",
-      "t": 13206
-    },
-    {
-      "type": "keydown",
-      "key": "r",
-      "t": 13206
-    },
-    {
-      "type": "input",
-      "value": "pietro@pietr",
-      "t": 13207
-    },
-    {
-      "type": "input",
-      "value": "pietro@pietr",
-      "t": 13207
-    },
-    {
-      "type": "keydown",
-      "key": "o",
-      "t": 13242
-    },
-    {
-      "type": "keydown",
-      "key": "o",
-      "t": 13242
-    },
-    {
-      "type": "input",
-      "value": "pietro@pietro",
-      "t": 13243
-    },
-    {
-      "type": "input",
-      "value": "pietro@pietro",
-      "t": 13243
-    },
-    {
-      "type": "keyup",
-      "key": "t",
-      "t": 13254
-    },
-    {
-      "type": "keyup",
-      "key": "t",
-      "t": 13254
-    },
-    {
-      "type": "keyup",
-      "key": "r",
-      "t": 13290
-    },
-    {
-      "type": "keyup",
-      "key": "r",
-      "t": 13290
-    },
-    {
-      "type": "keyup",
-      "key": "o",
-      "t": 13314
-    },
-    {
-      "type": "keyup",
-      "key": "o",
-      "t": 13314
-    },
-    {
-      "type": "keydown",
-      "key": "a",
-      "t": 13398
-    },
-    {
-      "type": "keydown",
-      "key": "a",
-      "t": 13399
-    },
-    {
-      "type": "input",
-      "value": "pietro@pietroa",
-      "t": 13399
-    },
-    {
-      "type": "input",
-      "value": "pietro@pietroa",
-      "t": 13399
-    },
-    {
-      "type": "keydown",
-      "key": "l",
-      "t": 13494
-    },
-    {
-      "type": "keydown",
-      "key": "l",
-      "t": 13494
-    },
-    {
-      "type": "input",
-      "value": "pietro@pietroal",
-      "t": 13495
-    },
-    {
-      "type": "input",
-      "value": "pietro@pietroal",
-      "t": 13495
-    },
-    {
-      "type": "keyup",
-      "key": "a",
-      "t": 13506
-    },
-    {
-      "type": "keyup",
-      "key": "a",
-      "t": 13506
-    },
-    {
-      "type": "keyup",
-      "key": "l",
-      "t": 13566
-    },
-    {
-      "type": "keyup",
-      "key": "l",
-      "t": 13566
-    },
-    {
-      "type": "keydown",
-      "key": "b",
-      "t": 13626
-    },
-    {
-      "type": "keydown",
-      "key": "b",
-      "t": 13627
-    },
-    {
-      "type": "input",
-      "value": "pietro@pietroalb",
-      "t": 13627
-    },
-    {
-      "type": "input",
-      "value": "pietro@pietroalb",
-      "t": 13627
-    },
-    {
-      "type": "keydown",
-      "key": "e",
-      "t": 13674
-    },
-    {
-      "type": "keydown",
-      "key": "e",
-      "t": 13675
-    },
-    {
-      "type": "input",
-      "value": "pietro@pietroalbe",
-      "t": 13676
-    },
-    {
-      "type": "input",
-      "value": "pietro@pietroalbe",
-      "t": 13676
-    },
-    {
-      "type": "keyup",
-      "key": "b",
-      "t": 13725
-    },
-    {
-      "type": "keyup",
-      "key": "b",
-      "t": 13725
-    },
-    {
-      "type": "keyup",
-      "key": "e",
-      "t": 13770
-    },
-    {
-      "type": "keyup",
-      "key": "e",
-      "t": 13770
-    },
-    {
-      "type": "keydown",
-      "key": "r",
-      "t": 13830
-    },
-    {
-      "type": "keydown",
-      "key": "r",
-      "t": 13831
-    },
-    {
-      "type": "input",
-      "value": "pietro@pietroalber",
-      "t": 13831
-    },
-    {
-      "type": "input",
-      "value": "pietro@pietroalber",
-      "t": 13831
-    },
-    {
-      "type": "keyup",
-      "key": "r",
-      "t": 13914
-    },
-    {
-      "type": "keyup",
-      "key": "r",
-      "t": 13914
-    },
-    {
-      "type": "keydown",
-      "key": "t",
-      "t": 13986
-    },
-    {
-      "type": "keydown",
-      "key": "t",
-      "t": 13987
-    },
-    {
-      "type": "input",
-      "value": "pietro@pietroalbert",
-      "t": 13987
-    },
-    {
-      "type": "input",
-      "value": "pietro@pietroalbert",
-      "t": 13987
-    },
-    {
-      "type": "keydown",
-      "key": "i",
-      "t": 14022
-    },
-    {
-      "type": "keydown",
-      "key": "i",
-      "t": 14023
-    },
-    {
-      "type": "input",
-      "value": "pietro@pietroalberti",
-      "t": 14023
-    },
-    {
-      "type": "input",
-      "value": "pietro@pietroalberti",
-      "t": 14023
-    },
-    {
-      "type": "keyup",
-      "key": "t",
-      "t": 14058
-    },
-    {
-      "type": "keyup",
-      "key": "t",
-      "t": 14058
-    },
-    {
-      "type": "keyup",
-      "key": "i",
-      "t": 14094
-    },
-    {
-      "type": "keyup",
-      "key": "i",
-      "t": 14094
-    },
-    {
-      "type": "keydown",
-      "key": ".",
-      "t": 14190
-    },
-    {
-      "type": "keydown",
-      "key": ".",
-      "t": 14191
-    },
-    {
-      "type": "input",
-      "value": "pietro@pietroalberti.",
-      "t": 14191
-    },
-    {
-      "type": "input",
-      "value": "pietro@pietroalberti.",
-      "t": 14191
-    },
-    {
-      "type": "keydown",
-      "key": "c",
-      "t": 14251
-    },
-    {
-      "type": "keydown",
-      "key": "c",
-      "t": 14252
-    },
-    {
-      "type": "input",
-      "value": "pietro@pietroalberti.c",
-      "t": 14252
-    },
-    {
-      "type": "input",
-      "value": "pietro@pietroalberti.c",
-      "t": 14252
-    },
-    {
-      "type": "keyup",
-      "key": ".",
-      "t": 14274
-    },
-    {
-      "type": "keyup",
-      "key": ".",
-      "t": 14274
-    },
-    {
-      "type": "keyup",
-      "key": "c",
-      "t": 14346
-    },
-    {
-      "type": "keyup",
-      "key": "c",
-      "t": 14346
-    },
-    {
-      "type": "keydown",
-      "key": "h",
-      "t": 14370
-    },
-    {
-      "type": "keydown",
-      "key": "h",
-      "t": 14370
-    },
-    {
-      "type": "input",
-      "value": "pietro@pietroalberti.ch",
-      "t": 14371
-    },
-    {
-      "type": "input",
-      "value": "pietro@pietroalberti.ch",
-      "t": 14371
-    },
-    {
-      "type": "keyup",
-      "key": "h",
-      "t": 14454
-    },
-    {
-      "type": "keyup",
-      "key": "h",
-      "t": 14454
-    },
-    {
-      "type": "mousemove",
-      "x": 1638,
-      "y": 631,
-      "t": 15547,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1637,
-      "y": 633,
-      "t": 15630,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1635,
-      "y": 635,
-      "t": 15664,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1633,
-      "y": 638,
-      "t": 15697,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1631,
-      "y": 638,
-      "t": 15780,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1631,
-      "y": 639,
-      "t": 15814,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1630,
-      "y": 640,
-      "t": 15847,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousedown",
-      "x": 1630,
-      "y": 640,
-      "button": 0,
-      "t": 16127,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousedown",
-      "x": 1630,
-      "y": 640,
-      "button": 0,
-      "t": 16128,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mouseup",
-      "x": 1630,
-      "y": 640,
-      "button": 0,
-      "t": 16231,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mouseup",
-      "x": 1630,
-      "y": 640,
-      "button": 0,
-      "t": 16231,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "navigate",
-      "url": "http://localhost:5173/",
-      "t": 17258
-    },
-    {
-      "type": "mousemove",
-      "x": 1629,
-      "y": 640,
-      "t": 18230,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1552,
-      "y": 601,
-      "t": 18263,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1467,
-      "y": 565,
-      "t": 18297,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1384,
-      "y": 519,
-      "t": 18330,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1330,
-      "y": 479,
-      "t": 18364,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1286,
-      "y": 446,
-      "t": 18397,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1215,
-      "y": 403,
-      "t": 18430,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1130,
-      "y": 365,
-      "t": 18463,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 999,
-      "y": 321,
-      "t": 18497,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 900,
-      "y": 288,
-      "t": 18530,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 828,
-      "y": 261,
-      "t": 18563,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 756,
-      "y": 236,
-      "t": 18597,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 698,
-      "y": 217,
-      "t": 18631,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 641,
+      "x": 424,
       "y": 197,
-      "t": 18664,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 601,
-      "y": 187,
-      "t": 18697,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 589,
-      "y": 183,
-      "t": 18730,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 585,
-      "y": 180,
-      "t": 18764,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 580,
-      "y": 177,
-      "t": 18797,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 573,
-      "y": 174,
-      "t": 18830,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 568,
-      "y": 173,
-      "t": 18864,
-      "vw": 1922,
-      "vh": 1082
+      "t": 19089,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousedown",
-      "x": 568,
-      "y": 173,
+      "x": 423,
+      "y": 197,
       "button": 0,
-      "t": 19072,
-      "vw": 1922,
-      "vh": 1082
+      "t": 19377,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousedown",
-      "x": 568,
-      "y": 173,
+      "x": 423,
+      "y": 197,
       "button": 0,
-      "t": 19072,
-      "vw": 1922,
-      "vh": 1082
+      "t": 19377,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mouseup",
-      "x": 568,
-      "y": 173,
+      "x": 423,
+      "y": 197,
       "button": 0,
-      "t": 19183,
-      "vw": 1922,
-      "vh": 1082
+      "t": 19480,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mouseup",
-      "x": 568,
-      "y": 173,
+      "x": 423,
+      "y": 197,
       "button": 0,
-      "t": 19184,
-      "vw": 1922,
-      "vh": 1082
+      "t": 19480,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "navigate",
       "url": "http://localhost:5173/projects/pink-lady",
-      "t": 19202
+      "t": 19493
     },
     {
       "type": "mousemove",
-      "x": 568,
-      "y": 173,
-      "t": 20231,
-      "vw": 1922,
-      "vh": 1082
+      "x": 423,
+      "y": 192,
+      "t": 22339,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 571,
-      "y": 193,
-      "t": 20264,
-      "vw": 1922,
-      "vh": 1082
+      "x": 423,
+      "y": 178,
+      "t": 22375,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 577,
-      "y": 216,
-      "t": 20298,
-      "vw": 1922,
-      "vh": 1082
+      "x": 423,
+      "y": 144,
+      "t": 22409,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 588,
-      "y": 240,
-      "t": 20331,
-      "vw": 1922,
-      "vh": 1082
+      "x": 423,
+      "y": 101,
+      "t": 22445,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 604,
-      "y": 266,
-      "t": 20363,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 618,
-      "y": 287,
-      "t": 20397,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 626,
-      "y": 300,
-      "t": 20431,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 634,
-      "y": 314,
-      "t": 20464,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 639,
-      "y": 323,
-      "t": 20497,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 644,
-      "y": 333,
-      "t": 20531,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 650,
-      "y": 344,
-      "t": 20564,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 657,
-      "y": 355,
-      "t": 20597,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 669,
-      "y": 373,
-      "t": 20631,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 678,
-      "y": 385,
-      "t": 20664,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 683,
-      "y": 392,
-      "t": 20697,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 688,
-      "y": 399,
-      "t": 20731,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 691,
-      "y": 402,
-      "t": 20764,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 697,
-      "y": 406,
-      "t": 20797,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 701,
-      "y": 411,
-      "t": 20830,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 704,
-      "y": 413,
-      "t": 20864,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 708,
-      "y": 416,
-      "t": 20897,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 712,
-      "y": 418,
-      "t": 20931,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 717,
-      "y": 421,
-      "t": 20964,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 717,
-      "y": 422,
-      "t": 20997,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousedown",
-      "x": 717,
-      "y": 422,
-      "button": 0,
-      "t": 21048,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousedown",
-      "x": 717,
-      "y": 422,
-      "button": 0,
-      "t": 21048,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mouseup",
-      "x": 717,
-      "y": 422,
-      "button": 0,
-      "t": 21167,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mouseup",
-      "x": 717,
-      "y": 422,
-      "button": 0,
-      "t": 21168,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 734,
-      "y": 430,
-      "t": 21914,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 806,
-      "y": 455,
-      "t": 21948,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 879,
-      "y": 473,
-      "t": 21981,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 949,
-      "y": 493,
-      "t": 22014,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1008,
-      "y": 505,
-      "t": 22047,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1058,
-      "y": 512,
-      "t": 22081,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1103,
-      "y": 521,
-      "t": 22114,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1159,
-      "y": 535,
-      "t": 22148,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1204,
-      "y": 550,
-      "t": 22181,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1258,
-      "y": 576,
-      "t": 22214,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1304,
-      "y": 606,
-      "t": 22247,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1343,
-      "y": 646,
-      "t": 22280,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1392,
-      "y": 692,
-      "t": 22314,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1439,
-      "y": 745,
-      "t": 22349,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1475,
-      "y": 787,
-      "t": 22381,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1499,
-      "y": 818,
-      "t": 22414,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1507,
-      "y": 832,
-      "t": 22447,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1515,
-      "y": 850,
+      "x": 424,
+      "y": 46,
       "t": 22481,
-      "vw": 1922,
-      "vh": 1082
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1520,
-      "y": 861,
-      "t": 22514,
-      "vw": 1922,
-      "vh": 1082
+      "x": 424,
+      "y": 16,
+      "t": 22517,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1520,
-      "y": 864,
-      "t": 22547,
-      "vw": 1922,
-      "vh": 1082
+      "x": 424,
+      "y": 0,
+      "t": 22553,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1521,
-      "y": 875,
-      "t": 22581,
-      "vw": 1922,
-      "vh": 1082
+      "x": 424,
+      "y": 0,
+      "t": 22586,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1522,
-      "y": 883,
-      "t": 22615,
-      "vw": 1922,
-      "vh": 1082
+      "x": 423,
+      "y": 0,
+      "t": 22636,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1524,
-      "y": 891,
-      "t": 22648,
-      "vw": 1922,
-      "vh": 1082
+      "x": 423,
+      "y": 0,
+      "t": 22687,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "mousemove",
-      "x": 1527,
-      "y": 911,
-      "t": 22681,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1528,
-      "y": 916,
-      "t": 22714,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1529,
-      "y": 920,
-      "t": 22747,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1529,
-      "y": 924,
-      "t": 22780,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1529,
-      "y": 927,
-      "t": 22815,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousemove",
-      "x": 1529,
-      "y": 928,
-      "t": 22848,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousedown",
-      "x": 1529,
-      "y": 928,
-      "button": 0,
-      "t": 22896,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mousedown",
-      "x": 1529,
-      "y": 928,
-      "button": 0,
-      "t": 22896,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mouseup",
-      "x": 1529,
-      "y": 928,
-      "button": 0,
-      "t": 23000,
-      "vw": 1922,
-      "vh": 1082
-    },
-    {
-      "type": "mouseup",
-      "x": 1529,
-      "y": 928,
-      "button": 0,
-      "t": 23000,
-      "vw": 1922,
-      "vh": 1082
+      "x": 423,
+      "y": 0,
+      "t": 22737,
+      "vw": 2962,
+      "vh": 1666
     },
     {
       "type": "keydown",
       "key": "Control",
-      "t": 27667
+      "t": 23373
     },
     {
       "type": "keydown",
       "key": "Control",
-      "t": 27667
+      "t": 23373
+    },
+    {
+      "type": "keydown",
+      "key": "w",
+      "t": 23577
+    },
+    {
+      "type": "keydown",
+      "key": "w",
+      "t": 23577
     }
   ]
 }
