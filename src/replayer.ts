@@ -10,7 +10,7 @@ import type {
   InputEvent,
   KeyEvent,
 } from "./types.js";
-import { injectCursor, moveCursor } from "./cursor.js";
+import { injectCursor, setCursorPosition } from "./cursor.js";
 import { launchBrowser } from "./browser.js";
 
 export interface ReplayOptions {
@@ -31,6 +31,11 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}): Pro
     fullscreen: opts.fullscreen,
   });
 
+  // Start cursor at the first recorded mouse position to avoid an initial jump.
+  const firstMove = session.events.find((e) => e.type === "mousemove") as MouseMoveEvent | undefined;
+  let cursorX = firstMove?.x ?? 0;
+  let cursorY = firstMove?.y ?? 0;
+
   async function hideCursor(pg: Page) {
     await pg.evaluate(() => {
       const style = document.createElement("style");
@@ -42,7 +47,11 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}): Pro
   async function navigate(pg: Page, url: string) {
     await pg.goto(url, { waitUntil: "domcontentloaded" });
     await hideCursor(pg);
-    await injectCursor(pg);
+    // Inject cursor pre-positioned at the last known location.
+    await injectCursor(pg, cursorX, cursorY);
+    // Also move Puppeteer's internal mouse state there so the first mouse.move
+    // delta is correct (avoids a snap back to 0,0 on the next move call).
+    await pg.mouse.move(cursorX, cursorY);
   }
 
   await page.evaluateOnNewDocument(() => {
@@ -56,17 +65,23 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}): Pro
   await navigate(page, session.startUrl);
 
   const buttonsDown = new Set<string>();
-  let prevT = 0;
-  let cursorX = 0;
-  let cursorY = 0;
+
+  // Wall-clock reference: session time 0 maps to replayStart.
+  const replayStart = Date.now();
+
+  function targetTime(t: number) {
+    return replayStart + t / speed;
+  }
+
+  async function waitUntil(t: number) {
+    const remaining = targetTime(t) - Date.now();
+    if (remaining > 1) await sleep(remaining);
+  }
 
   for (const event of session.events) {
-    const delay = Math.max(0, (event.t - prevT) / speed);
-    prevT = event.t;
-
     switch (event.type) {
       case "navigate": {
-        if (delay > 0) await sleep(delay);
+        await waitUntil(event.t);
         const nav = event as NavigateEvent;
         if (nav.url !== page.url()) {
           await navigate(page, nav.url);
@@ -75,29 +90,30 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}): Pro
       }
 
       case "mousemove": {
-        // Interpolate at ~60fps from the last cursor position to this one
-        // over the exact recorded duration so the cursor never skips frames.
         const me = event as MouseMoveEvent;
         const fromX = cursorX;
         const fromY = cursorY;
         const toX = me.x;
         const toY = me.y;
+        const end = targetTime(me.t);
+        const duration = end - Date.now();
 
-        if (delay <= 16 || (fromX === toX && fromY === toY)) {
-          // Short gap or no movement — just move directly
+        if (duration <= 16 || (fromX === toX && fromY === toY)) {
+          await waitUntil(me.t);
           await page.mouse.move(toX, toY);
-          await moveCursor(page, toX, toY);
-          if (delay > 0) await sleep(delay);
         } else {
-          const steps = Math.ceil(delay / 16);
-          const stepMs = delay / steps;
+          // Interpolate at ~60fps, using wall-clock for each step so CDP
+          // overhead doesn't accumulate into timing drift.
+          const steps = Math.ceil(duration / 16);
+          const start = Date.now();
           for (let s = 1; s <= steps; s++) {
             const t = s / steps;
             const x = Math.round(fromX + (toX - fromX) * t);
             const y = Math.round(fromY + (toY - fromY) * t);
             await page.mouse.move(x, y);
-            await moveCursor(page, x, y);
-            await sleep(stepMs);
+            const stepTarget = start + (end - start) * t;
+            const remaining = stepTarget - Date.now();
+            if (remaining > 1) await sleep(remaining);
           }
         }
 
@@ -107,31 +123,29 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}): Pro
       }
 
       case "mousedown": {
-        if (delay > 0) await sleep(delay);
+        await waitUntil(event.t);
         const me = event as MouseButtonEvent;
         const btn = me.button === 2 ? "right" : "left";
         if (buttonsDown.has(btn)) break;
         await page.mouse.move(me.x, me.y);
-        await moveCursor(page, me.x, me.y);
         await page.mouse.down({ button: btn });
         buttonsDown.add(btn);
         break;
       }
 
       case "mouseup": {
-        if (delay > 0) await sleep(delay);
+        await waitUntil(event.t);
         const me = event as MouseButtonEvent;
         const btn = me.button === 2 ? "right" : "left";
         if (!buttonsDown.has(btn)) break;
         await page.mouse.move(me.x, me.y);
-        await moveCursor(page, me.x, me.y);
         await page.mouse.up({ button: btn });
         buttonsDown.delete(btn);
         break;
       }
 
       case "scroll": {
-        if (delay > 0) await sleep(delay);
+        await waitUntil(event.t);
         const se = event as ScrollEvent;
         await page.evaluate(
           (sx: number, sy: number) => window.scrollTo(sx, sy),
@@ -142,7 +156,7 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}): Pro
       }
 
       case "input": {
-        if (delay > 0) await sleep(delay);
+        await waitUntil(event.t);
         const ie = event as InputEvent;
         await page.evaluate((val: string) => {
           const el = document.activeElement as HTMLInputElement | null;
@@ -155,14 +169,14 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}): Pro
       }
 
       case "keydown": {
-        if (delay > 0) await sleep(delay);
+        await waitUntil(event.t);
         const ke = event as KeyEvent;
         await page.keyboard.down(ke.key as Parameters<typeof page.keyboard.down>[0]);
         break;
       }
 
       case "keyup": {
-        if (delay > 0) await sleep(delay);
+        await waitUntil(event.t);
         const ke = event as KeyEvent;
         await page.keyboard.up(ke.key as Parameters<typeof page.keyboard.up>[0]);
         break;

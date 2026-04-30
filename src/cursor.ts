@@ -15,13 +15,13 @@ const CURSOR_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="3
         filter="url(#cs)"/>
 </svg>`;
 
-export async function injectCursor(page: Page): Promise<void> {
+export async function injectCursor(page: Page, x = 0, y = 0): Promise<void> {
   await page.evaluate(
-    ({ id, svg }: { id: string; svg: string }) => {
+    ({ id, svg, x, y }: { id: string; svg: string; x: number; y: number }) => {
       if (document.getElementById(id)) return;
-      const wrapper = document.createElement("div");
-      wrapper.id = id;
-      wrapper.style.cssText = [
+      const el = document.createElement("div");
+      el.id = id;
+      el.style.cssText = [
         "position:fixed",
         "top:0",
         "left:0",
@@ -30,15 +30,22 @@ export async function injectCursor(page: Page): Promise<void> {
         "pointer-events:none",
         "z-index:2147483647",
         "will-change:transform",
+        `transform:translate(${x}px,${y}px)`,
       ].join(";");
-      wrapper.innerHTML = svg;
-      document.documentElement.appendChild(wrapper);
+      el.innerHTML = svg;
+      document.documentElement.appendChild(el);
+
+      // Auto-follow Puppeteer's synthetic mouse events — no round-trip needed per frame.
+      document.addEventListener("mousemove", (e) => {
+        el.style.transform = `translate(${e.clientX}px,${e.clientY}px)`;
+      }, { capture: true, passive: true });
     },
-    { id: CURSOR_ID, svg: CURSOR_SVG }
+    { id: CURSOR_ID, svg: CURSOR_SVG, x, y }
   );
 }
 
-export async function moveCursor(page: Page, x: number, y: number): Promise<void> {
+/** Force cursor to a position without a mouse event (e.g. right after navigation). */
+export async function setCursorPosition(page: Page, x: number, y: number): Promise<void> {
   await page.evaluate(
     ({ id, x, y }: { id: string; x: number; y: number }) => {
       const el = document.getElementById(id);
@@ -46,8 +53,4 @@ export async function moveCursor(page: Page, x: number, y: number): Promise<void
     },
     { id: CURSOR_ID, x, y }
   );
-}
-
-export async function ensureCursor(page: Page): Promise<void> {
-  await injectCursor(page);
 }
