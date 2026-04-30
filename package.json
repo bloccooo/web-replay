@@ -1,0 +1,23 @@
+{
+  "name": "web-session-replay",
+  "module": "src/index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "record": "bun src/index.ts record",
+    "replay": "bun src/index.ts replay"
+  },
+  "bin": {
+    "wsr": "src/index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "^25.6.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "puppeteer": "^24.42.0"
+  }
+}
