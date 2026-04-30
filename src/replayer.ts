@@ -5,13 +5,11 @@ import type {
   SessionEvent,
   MouseMoveEvent,
   MouseButtonEvent,
-  NavigateEvent,
-  WheelEvent as ReplayWheelEvent,
   ScrollEvent,
   InputEvent,
   KeyEvent,
 } from "./types.js";
-import { injectCursor, setCursorPosition } from "./cursor.js";
+import { injectCursor } from "./cursor.js";
 import { launchBrowser } from "./browser.js";
 
 export interface ReplayOptions {
@@ -21,7 +19,10 @@ export interface ReplayOptions {
   fullscreen?: boolean;
 }
 
-export async function replay(sessionPath: string, opts: ReplayOptions = {}): Promise<void> {
+export async function replay(
+  sessionPath: string,
+  opts: ReplayOptions = {},
+): Promise<void> {
   const raw = readFileSync(sessionPath, "utf-8");
   const session: Session = JSON.parse(raw);
   const speed = opts.speed ?? 1;
@@ -33,7 +34,9 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}): Pro
   });
 
   // Start cursor at the first recorded mouse position to avoid an initial jump.
-  const firstMove = session.events.find((e) => e.type === "mousemove") as MouseMoveEvent | undefined;
+  const firstMove = session.events.find((e) => e.type === "mousemove") as
+    | MouseMoveEvent
+    | undefined;
   let cursorX = firstMove?.x ?? 0;
   let cursorY = firstMove?.y ?? 0;
 
@@ -61,85 +64,30 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}): Pro
     document.head?.appendChild(style);
   });
 
-  console.log(`Replaying ${session.events.length} events at ${speed}x speed...`);
+  console.log(
+    `Replaying ${session.events.length} events at ${speed}x speed...`,
+  );
 
   await navigate(page, session.startUrl);
 
   const buttonsDown = new Set<string>();
 
-  // Pre-compute which wheel events are NOT followed by a scroll event within 200ms.
-  // Those are custom handlers (e.g. map zoom) that need page.mouse.wheel().
-  // Plain scrolling is covered by the scroll events via scrollTo().
-  const wheelIsCustomHandler = new Set<number>();
-  for (let i = 0; i < session.events.length; i++) {
-    if (session.events[i]!.type !== "wheel") continue;
-    const wheelT = session.events[i]!.t;
-    let hasFollowingScroll = false;
-    for (let j = i + 1; j < session.events.length && session.events[j]!.t - wheelT < 200; j++) {
-      if (session.events[j]!.type === "scroll") { hasFollowingScroll = true; break; }
-    }
-    if (!hasFollowingScroll) wheelIsCustomHandler.add(i);
+  const replayStart = performance.now();
+
+  function sessionElapsed() {
+    return (performance.now() - replayStart) * speed;
   }
 
-  // Wall-clock reference: session time 0 maps to replayStart.
-  const replayStart = Date.now();
-
-  function targetTime(t: number) {
-    return replayStart + t / speed;
-  }
-
-  async function waitUntil(t: number) {
-    const remaining = targetTime(t) - Date.now();
-    if (remaining > 1) await sleep(remaining);
-  }
-
-  for (let ei = 0; ei < session.events.length; ei++) {
-    const event = session.events[ei]!;
+  async function executeEvent(event: SessionEvent) {
     switch (event.type) {
-      case "navigate": {
-        await waitUntil(event.t);
-        const nav = event as NavigateEvent;
-        if (nav.url !== page.url()) {
-          await navigate(page, nav.url);
-        }
-        break;
-      }
-
       case "mousemove": {
         const me = event as MouseMoveEvent;
-        const fromX = cursorX;
-        const fromY = cursorY;
-        const toX = me.x;
-        const toY = me.y;
-        const end = targetTime(me.t);
-        const duration = end - Date.now();
-
-        if (duration <= 16 || (fromX === toX && fromY === toY)) {
-          await waitUntil(me.t);
-          await page.mouse.move(toX, toY);
-        } else {
-          // Interpolate at ~60fps, using wall-clock for each step so CDP
-          // overhead doesn't accumulate into timing drift.
-          const steps = Math.ceil(duration / 16);
-          const start = Date.now();
-          for (let s = 1; s <= steps; s++) {
-            const t = s / steps;
-            const x = Math.round(fromX + (toX - fromX) * t);
-            const y = Math.round(fromY + (toY - fromY) * t);
-            await page.mouse.move(x, y);
-            const stepTarget = start + (end - start) * t;
-            const remaining = stepTarget - Date.now();
-            if (remaining > 1) await sleep(remaining);
-          }
-        }
-
-        cursorX = toX;
-        cursorY = toY;
+        await page.mouse.move(me.x, me.y);
+        cursorX = me.x;
+        cursorY = me.y;
         break;
       }
-
       case "mousedown": {
-        await waitUntil(event.t);
         const me = event as MouseButtonEvent;
         const btn = me.button === 2 ? "right" : "left";
         if (buttonsDown.has(btn)) break;
@@ -148,9 +96,7 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}): Pro
         buttonsDown.add(btn);
         break;
       }
-
       case "mouseup": {
-        await waitUntil(event.t);
         const me = event as MouseButtonEvent;
         const btn = me.button === 2 ? "right" : "left";
         if (!buttonsDown.has(btn)) break;
@@ -159,26 +105,13 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}): Pro
         buttonsDown.delete(btn);
         break;
       }
-
-      case "wheel": {
-        await waitUntil(event.t);
-        if (wheelIsCustomHandler.has(ei)) {
-          const we = event as ReplayWheelEvent;
-          const LINE = 40;
-          const PAGE = session.viewport.height;
-          const scale = we.deltaMode === 1 ? LINE : we.deltaMode === 2 ? PAGE : 1;
-          await page.mouse.wheel({ deltaX: we.deltaX * scale, deltaY: we.deltaY * scale });
-        }
-        break;
-      }
-
       case "scroll": {
-        await waitUntil(event.t);
         const se = event as ScrollEvent;
         if (se.isWindow) {
           await page.evaluate(
             (sx: number, sy: number) => window.scrollTo(sx, sy),
-            se.scrollX, se.scrollY,
+            se.scrollX,
+            se.scrollY,
           );
         } else {
           await page.evaluate(
@@ -187,22 +120,27 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}): Pro
               while (el && el !== document.documentElement) {
                 const { overflow, overflowX, overflowY } = getComputedStyle(el);
                 const scrollable = overflow + overflowX + overflowY;
-                if ((scrollable.includes("auto") || scrollable.includes("scroll")) &&
-                    (el.scrollHeight > el.clientHeight || el.scrollWidth > el.clientWidth)) {
+                if (
+                  (scrollable.includes("auto") ||
+                    scrollable.includes("scroll")) &&
+                  (el.scrollHeight > el.clientHeight ||
+                    el.scrollWidth > el.clientWidth)
+                ) {
                   el.scrollTo(sx, sy);
                   return;
                 }
                 el = el.parentElement;
               }
             },
-            se.scrollX, se.scrollY, cursorX, cursorY,
+            se.scrollX,
+            se.scrollY,
+            cursorX,
+            cursorY,
           );
         }
         break;
       }
-
       case "input": {
-        await waitUntil(event.t);
         const ie = event as InputEvent;
         await page.evaluate((val: string) => {
           const el = document.activeElement as HTMLInputElement | null;
@@ -213,21 +151,33 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}): Pro
         }, ie.value);
         break;
       }
-
       case "keydown": {
-        await waitUntil(event.t);
         const ke = event as KeyEvent;
-        await page.keyboard.down(ke.key as Parameters<typeof page.keyboard.down>[0]);
+        await page.keyboard.down(
+          ke.key as Parameters<typeof page.keyboard.down>[0],
+        );
         break;
       }
-
       case "keyup": {
-        await waitUntil(event.t);
         const ke = event as KeyEvent;
-        await page.keyboard.up(ke.key as Parameters<typeof page.keyboard.up>[0]);
+        await page.keyboard.up(
+          ke.key as Parameters<typeof page.keyboard.up>[0],
+        );
         break;
       }
     }
+  }
+
+  let ei = 0;
+  while (ei < session.events.length) {
+    const now = sessionElapsed();
+
+    while (ei < session.events.length && session.events[ei]!.t <= now) {
+      await executeEvent(session.events[ei]!);
+      ei++;
+    }
+
+    if (ei >= session.events.length) break;
   }
 
   console.log("Replay complete.");

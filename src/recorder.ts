@@ -1,9 +1,12 @@
 import { type Page } from "puppeteer";
 import { writeFileSync } from "fs";
-import type { Session, SessionEvent, MouseButtonEvent, WheelEvent as ReplayWheelEvent, ScrollEvent } from "./types.js";
+import type {
+  Session,
+  SessionEvent,
+  MouseButtonEvent,
+  ScrollEvent,
+} from "./types.js";
 import { launchBrowser } from "./browser.js";
-
-const MOUSEMOVE_INTERVAL_MS = 32;
 
 export interface RecordOptions {
   width?: number;
@@ -11,10 +14,14 @@ export interface RecordOptions {
   fullscreen?: boolean;
 }
 
-export async function record(startUrl: string, outputPath: string, opts: RecordOptions = {}): Promise<void> {
+export async function record(
+  startUrl: string,
+  outputPath: string,
+  opts: RecordOptions = {},
+): Promise<void> {
   const { browser, page } = await launchBrowser(opts);
 
-  const startTime = Date.now();
+  const startTime = performance.now();
   const events: SessionEvent[] = [];
 
   const viewport = await page.evaluate(() => ({
@@ -22,10 +29,8 @@ export async function record(startUrl: string, outputPath: string, opts: RecordO
     height: window.innerHeight,
   }));
 
-  let lastMouseMoveTime = 0;
-
   function elapsed() {
-    return Date.now() - startTime;
+    return performance.now() - startTime;
   }
 
   async function attachPageListeners(pg: Page) {
@@ -38,66 +43,139 @@ export async function record(startUrl: string, outputPath: string, opts: RecordO
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const w = window as any;
 
-      document.addEventListener("mousemove", (e: MouseEvent) => {
-        w.__replayMouseMove?.({ x: e.clientX, y: e.clientY });
-      }, { capture: true, passive: true });
+      document.addEventListener(
+        "mousemove",
+        (e: MouseEvent) => {
+          w.__replayMouseMove?.({ x: e.clientX, y: e.clientY });
+        },
+        { capture: true, passive: true },
+      );
 
-      document.addEventListener("mousedown", (e: MouseEvent) => {
-        w.__replayMouseDown?.({ x: e.clientX, y: e.clientY, button: e.button });
-      }, { capture: true, passive: true });
+      document.addEventListener(
+        "mousedown",
+        (e: MouseEvent) => {
+          w.__replayMouseDown?.({
+            x: e.clientX,
+            y: e.clientY,
+            button: e.button,
+          });
+        },
+        { capture: true, passive: true },
+      );
 
-      document.addEventListener("mouseup", (e: MouseEvent) => {
-        w.__replayMouseUp?.({ x: e.clientX, y: e.clientY, button: e.button });
-      }, { capture: true, passive: true });
+      document.addEventListener(
+        "mouseup",
+        (e: MouseEvent) => {
+          w.__replayMouseUp?.({ x: e.clientX, y: e.clientY, button: e.button });
+        },
+        { capture: true, passive: true },
+      );
 
-      document.addEventListener("wheel", (e) => {
-        w.__replayWheel?.({ x: e.clientX, y: e.clientY, deltaX: e.deltaX, deltaY: e.deltaY, deltaMode: e.deltaMode });
-      }, { capture: true, passive: true });
+      document.addEventListener(
+        "wheel",
+        () => {
+          w.__replayWheelTick?.();
+        },
+        { capture: true, passive: true },
+      );
 
+      document.addEventListener(
+        "input",
+        (e: Event) => {
+          const target = e.target as HTMLInputElement | null;
+          if (!target) return;
+          w.__replayInput?.({ value: target.value });
+        },
+        { capture: true, passive: true },
+      );
 
-      document.addEventListener("input", (e: Event) => {
-        const target = e.target as HTMLInputElement | null;
-        if (!target) return;
-        w.__replayInput?.({ value: target.value });
-      }, { capture: true, passive: true });
+      document.addEventListener(
+        "keydown",
+        (e: KeyboardEvent) => {
+          w.__replayKeydown?.({ key: e.key });
+        },
+        { capture: true, passive: true },
+      );
 
-      document.addEventListener("keydown", (e: KeyboardEvent) => {
-        w.__replayKeydown?.({ key: e.key });
-      }, { capture: true, passive: true });
+      document.addEventListener(
+        "keyup",
+        (e: KeyboardEvent) => {
+          w.__replayKeyup?.({ key: e.key });
+        },
+        { capture: true, passive: true },
+      );
 
-      document.addEventListener("keyup", (e: KeyboardEvent) => {
-        w.__replayKeyup?.({ key: e.key });
-      }, { capture: true, passive: true });
-
-      document.addEventListener("scroll", (e: Event) => {
-        const target = e.target as EventTarget;
-        if (target === document || target === document.documentElement || target === document.body) {
-          w.__replayScroll?.({ scrollX: window.scrollX, scrollY: window.scrollY, isWindow: true });
-        } else {
-          const el = target as Element;
-          w.__replayScroll?.({ scrollX: el.scrollLeft, scrollY: el.scrollTop, isWindow: false });
-        }
-      }, { capture: true, passive: true });
+      document.addEventListener(
+        "scroll",
+        (e: Event) => {
+          const target = e.target as EventTarget;
+          if (
+            target === document ||
+            target === document.documentElement ||
+            target === document.body
+          ) {
+            w.__replayScroll?.({
+              scrollX: window.scrollX,
+              scrollY: window.scrollY,
+              isWindow: true,
+            });
+          } else {
+            const el = target as Element;
+            w.__replayScroll?.({
+              scrollX: el.scrollLeft,
+              scrollY: el.scrollTop,
+              isWindow: false,
+            });
+          }
+        },
+        { capture: true, passive: true },
+      );
     });
 
-    await pg.exposeFunction("__replayMouseMove", (data: { x: number; y: number }) => {
-      const t = elapsed();
-      if (t - lastMouseMoveTime < MOUSEMOVE_INTERVAL_MS) return;
-      lastMouseMoveTime = t;
-      events.push({ type: "mousemove", x: data.x, y: data.y, t, vw: vp.width, vh: vp.height });
-    });
+    await pg.exposeFunction(
+      "__replayMouseMove",
+      (data: { x: number; y: number }) => {
+        const t = elapsed();
+        events.push({
+          type: "mousemove",
+          x: data.x,
+          y: data.y,
+          t,
+          vw: vp.width,
+          vh: vp.height,
+        });
+      },
+    );
 
-    await pg.exposeFunction("__replayMouseDown", (data: { x: number; y: number; button: number }) => {
-      events.push({ type: "mousedown", x: data.x, y: data.y, button: data.button, t: elapsed(), vw: vp.width, vh: vp.height } as MouseButtonEvent);
-    });
+    await pg.exposeFunction(
+      "__replayMouseDown",
+      (data: { x: number; y: number; button: number }) => {
+        events.push({
+          type: "mousedown",
+          x: data.x,
+          y: data.y,
+          button: data.button,
+          t: elapsed(),
+          vw: vp.width,
+          vh: vp.height,
+        } as MouseButtonEvent);
+      },
+    );
 
-    await pg.exposeFunction("__replayMouseUp", (data: { x: number; y: number; button: number }) => {
-      events.push({ type: "mouseup", x: data.x, y: data.y, button: data.button, t: elapsed(), vw: vp.width, vh: vp.height } as MouseButtonEvent);
-    });
-
-    await pg.exposeFunction("__replayWheel", (data: { x: number; y: number; deltaX: number; deltaY: number; deltaMode: number }) => {
-      events.push({ type: "wheel", x: data.x, y: data.y, deltaX: data.deltaX, deltaY: data.deltaY, deltaMode: data.deltaMode, t: elapsed() } as ReplayWheelEvent);
-    });
+    await pg.exposeFunction(
+      "__replayMouseUp",
+      (data: { x: number; y: number; button: number }) => {
+        events.push({
+          type: "mouseup",
+          x: data.x,
+          y: data.y,
+          button: data.button,
+          t: elapsed(),
+          vw: vp.width,
+          vh: vp.height,
+        } as MouseButtonEvent);
+      },
+    );
 
     await pg.exposeFunction("__replayInput", (data: { value: string }) => {
       events.push({ type: "input", value: data.value, t: elapsed() });
@@ -111,14 +189,24 @@ export async function record(startUrl: string, outputPath: string, opts: RecordO
       events.push({ type: "keyup", key: data.key, t: elapsed() });
     });
 
-    await pg.exposeFunction("__replayScroll", (data: { scrollX: number; scrollY: number; isWindow: boolean }) => {
-      events.push({ type: "scroll", scrollX: data.scrollX, scrollY: data.scrollY, isWindow: data.isWindow, t: elapsed() } as ScrollEvent);
-    });
+    await pg.exposeFunction(
+      "__replayScroll",
+      (data: { scrollX: number; scrollY: number; isWindow: boolean }) => {
+        const t = elapsed();
+        events.push({
+          type: "scroll",
+          scrollX: data.scrollX,
+          scrollY: data.scrollY,
+          isWindow: data.isWindow,
+          t,
+        } as ScrollEvent);
+      },
+    );
   }
 
   page.on("framenavigated", (frame) => {
     if (frame !== page.mainFrame()) return;
-    events.push({ type: "navigate", url: frame.url(), t: elapsed() });
+    // events.push({ type: "navigate", url: frame.url(), t: elapsed() });
   });
 
   page.on("load", () => {
@@ -134,13 +222,21 @@ export async function record(startUrl: string, outputPath: string, opts: RecordO
     browser.on("disconnected", resolve);
   });
 
+  const lastIndexByKey = new Map<string, number>();
+  events.forEach((e, i) => lastIndexByKey.set(`${e.type}:${e.t}`, i));
+  const dedupedEvents = events.filter(
+    (_, i) => lastIndexByKey.get(`${events[i]?.type}:${events[i]?.t}`) === i,
+  );
+
   const session: Session = {
     version: 1,
     startUrl,
     viewport,
-    events,
+    events: dedupedEvents,
   };
 
   writeFileSync(outputPath, JSON.stringify(session, null, 2));
-  console.log(`Session saved to ${outputPath} (${events.length} events)`);
+  console.log(
+    `Session saved to ${outputPath} (${dedupedEvents.length} events)`,
+  );
 }
