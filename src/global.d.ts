@@ -23,7 +23,7 @@ declare global {
       _timerIdCounter: number;
       animations: Map<
         Element,
-        Map<string, { virtualStart: number; duration: number }>
+        Map<string, { virtualStart: number; duration: number; animationRef: Animation }>
       >;
       scrollTargets: Map<Element, { x: number; y: number }>;
       scrollCurrents: Map<Element, { x: number; y: number }>;

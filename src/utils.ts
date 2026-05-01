@@ -128,13 +128,15 @@ export async function evaluateFrameState(page: Page) {
       }
 
       const byKey = window._webRecorder.animations.get(target)!;
-      if (!byKey.has(key)) {
+      const existing = byKey.get(key);
+      if (!existing || existing.animationRef !== animation) {
         const timing = animation.effect!.getTiming();
         const duration = timing.duration as number;
         const iterations = timing.iterations ?? 1;
         byKey.set(key, {
           virtualStart: window._webRecorder.virtualTime,
           duration: iterations === Infinity ? Infinity : duration * iterations,
+          animationRef: animation,
         });
       }
     }
@@ -167,11 +169,23 @@ export async function evaluateFrame(page: Page) {
         });
 
         if (animation) {
-          animation.pause();
-          animation.currentTime = elapsed;
-        }
+          animation.pause(); // prevent real-time firing
 
-        if (duration !== Infinity && elapsed >= duration) {
+          if (duration === 0) {
+            // Zero-duration animation used purely to delay a side-effect via animationend.
+            // Must call finish() (not just set currentTime) to properly dispatch animationend.
+            const delay = (animation.effect!.getTiming().delay as number) || 0;
+            if (elapsed >= delay) {
+              animation.finish();
+              byKey.delete(key);
+            }
+          } else {
+            animation.currentTime = elapsed;
+            if (duration !== Infinity && elapsed >= duration) {
+              byKey.delete(key);
+            }
+          }
+        } else if (duration !== Infinity && elapsed >= duration) {
           byKey.delete(key);
         }
       }
@@ -188,15 +202,23 @@ export async function evaluateFrame(page: Page) {
     }
 
     // Drive timeouts
-    window._webRecorder.timeouts = window._webRecorder.timeouts.filter(
-      (entry) => {
-        if (window._webRecorder.virtualTime >= entry.scheduledAt) {
-          entry.callback();
-          return false;
-        }
-        return true;
-      },
-    );
+    const pendingTimeouts = window._webRecorder.timeouts;
+    window._webRecorder.timeouts = [];
+    for (const entry of pendingTimeouts) {
+      if (window._webRecorder.virtualTime >= entry.scheduledAt) {
+        entry.callback();
+      } else {
+        window._webRecorder.timeouts.push(entry);
+      }
+    }
+
+    // Drive SVG animations
+    // for (const svg of document.querySelectorAll("svg")) {
+    //   (svg as SVGSVGElement).pauseAnimations();
+    //   (svg as SVGSVGElement).setCurrentTime(
+    //     window._webRecorder.virtualTime / 1000,
+    //   );
+    // }
 
     // Drive intervals
     for (const entry of window._webRecorder.intervals) {
