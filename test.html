@@ -1,0 +1,100 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      @keyframes circle-animation {
+        0% {
+          width: 50px;
+          height: 50px;
+        }
+
+        50% {
+          width: 150px;
+          height: 150px;
+        }
+
+        100% {
+          width: 50px;
+          height: 50px;
+        }
+      }
+
+      .circle {
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: block;
+        width: 100px;
+        height: 100px;
+        animation: circle-animation 2s forwards infinite;
+        background-color: black;
+        border-radius: 50%;
+      }
+
+      .rect {
+        position: fixed;
+        top: 250px;
+        left: 0;
+        width: 200px;
+        height: 200px;
+        background-color: red;
+        transition: width 1s ease-in-out;
+      }
+
+      .rect:hover {
+        width: 400px;
+      }
+
+      .rect-anim {
+        position: fixed;
+        top: 500px;
+        left: 0;
+        width: 200px;
+        height: 200px;
+        background-color: blue;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="circle"></div>
+    <div class="rect"></div>
+    <div class="rect-anim"></div>
+
+    <script>
+      window.addEventListener("mousemove", (event) => {
+        const animations = document.getAnimations();
+
+        // for (const animation of animations) {
+        //   if (animation instanceof CSSTransition) {
+        //     const effect = animation.effect;
+        //     const duration = effect.getTiming().duration; // in milliseconds
+        //     const delay = effect.getTiming().delay; // delay before transition starts
+
+        //     console.log({
+        //       property: animation.transitionProperty,
+        //       duration,
+        //       delay,
+        //       startTime: animation.startTime,
+        //       currentTime: animation.currentTime,
+        //     });
+        //   }
+        // }
+      });
+
+      const now = Date.now();
+      const rectAnim = document.querySelector(".rect-anim");
+
+      function animate() {
+        const elapsed = (Date.now() - now) * 0.005;
+        rectAnim.style.transform = `translate(${Math.sin(elapsed) * 100 + 100}px, 0)`;
+
+        requestAnimationFrame(() => animate());
+      }
+
+      animate();
+    </script>
+  </body>
+</html>
