@@ -1,4 +1,4 @@
-import type { Page } from "puppeteer";
+import type { KeyInput, Page } from "puppeteer";
 
 export type MouseEvent = {
   type: "mousemove";
@@ -41,9 +41,9 @@ export async function applyEvent(page: Page, event: Event) {
   if (event.type === "mousemove") {
     await page.mouse.move(event.x, event.y);
   } else if (event.type === "keydown") {
-    await page.keyboard.down(event.key);
+    await page.keyboard.down(event.key as KeyInput);
   } else if (event.type === "keyup") {
-    await page.keyboard.up(event.key);
+    await page.keyboard.up(event.key as KeyInput);
   } else if (event.type === "mousedown") {
     await page.mouse.move(event.x, event.y);
     await page.mouse.down({ button: buttonName(event.button) });
@@ -58,7 +58,10 @@ export async function applyEvent(page: Page, event: Event) {
         while (el && el !== document.documentElement) {
           const { overflowY, overflowX } = getComputedStyle(el);
           if (/(auto|scroll)/.test(overflowY + overflowX)) {
-            window._webRecorder.scrollTargets.set(el, { x: scrollX, y: scrollY });
+            window._webRecorder.scrollTargets.set(el, {
+              x: scrollX,
+              y: scrollY,
+            });
             return;
           }
           el = el.parentElement;

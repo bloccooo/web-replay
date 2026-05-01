@@ -1,5 +1,4 @@
 import puppeteer, { type Browser, type Page } from "puppeteer";
-import { mkdirSync } from "node:fs";
 
 export interface SizeOptions {
   width?: number;

@@ -1,18 +1,32 @@
 import { writeFileSync } from "node:fs";
-import path from "node:path";
 import { launchBrowser } from "./browser";
 import { type Event } from "./events";
+import type { Session } from "./types";
 
-async function run() {
-  console.log("running");
+export interface RecordOptions {
+  width?: number;
+  height?: number;
+  fullscreen?: boolean;
+}
+
+export async function record(
+  startUrl: string,
+  outputPath: string,
+  opts: RecordOptions = {},
+) {
+  const width = opts.width || 1280;
+  const height = opts.height || 720;
+  const fullscreen = !!opts.fullscreen;
+
+  console.log(width, height);
 
   const { browser, page } = await launchBrowser({
-    width: 1280,
-    height: 730,
+    width,
+    height,
+    fullscreen,
   });
 
-  // await page.goto(`file://${path.join(__dirname, "../test.html")}`);
-  await page.goto("http://localhost:5173");
+  await page.goto(startUrl);
 
   const events: Event[] = [];
 
@@ -99,10 +113,16 @@ async function run() {
     document.addEventListener(
       "scroll",
       (e) => {
-        const target = e.target as Element;
+        const target = e.target;
         w.recordScroll({
-          scrollX: target === document ? window.scrollX : target.scrollLeft,
-          scrollY: target === document ? window.scrollY : target.scrollTop,
+          scrollX:
+            target === document
+              ? window.scrollX
+              : (target as Element).scrollLeft,
+          scrollY:
+            target === document
+              ? window.scrollY
+              : (target as Element).scrollTop,
         });
       },
       { capture: true },
@@ -113,7 +133,16 @@ async function run() {
     browser.on("disconnected", resolve);
   });
 
-  writeFileSync("session.json", JSON.stringify(events, null, 2));
-}
+  const session: Session = {
+    version: 1,
+    startUrl,
+    viewport: {
+      width: opts.width || 1280,
+      height: opts.height || 720,
+      fullscreen,
+    },
+    events,
+  };
 
-run();
+  writeFileSync(outputPath, JSON.stringify(session, null, 2));
+}

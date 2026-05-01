@@ -1,6 +1,4 @@
 import { readFileSync } from "node:fs";
-import path from "node:path";
-import type { Event } from "./testrecord";
 import { createVideoEncoder } from "./video";
 import { launchBrowser } from "./browser";
 import { virtualTimer } from "./virtualTimer";
@@ -11,23 +9,35 @@ import {
   evaluateFrame,
 } from "./utils";
 import { applyEvent } from "./events";
+import type { Session } from "./types";
 
-const fps = 60;
-const interval = 1000 / fps;
+export interface ReplayOptions {
+  speed?: number;
+  width?: number;
+  height?: number;
+  fullscreen?: boolean;
+  fps?: number;
+}
 
-async function run() {
-  console.log("running");
-  const file = readFileSync("session.json", "utf-8");
-  const events: Event[] = JSON.parse(file);
+export async function replay(sessionPath: string, opts: ReplayOptions = {}) {
+  const fps = opts.fps || 60;
+  const interval = 1000 / fps;
+
+  const file = readFileSync(sessionPath, "utf-8");
+  const session: Session = JSON.parse(file);
+  const events = session.events;
+
+  console.log(session.viewport);
+
   const { browser, page } = await launchBrowser({
-    width: 1280,
-    height: 730,
+    width: session.viewport.width,
+    height: session.viewport.height,
+    fullscreen: session.viewport.fullscreen,
   });
 
   await setupDocumentReplayOverrides(page);
 
-  // await page.goto(`file://${path.join(__dirname, "../test.html")}`);
-  await page.goto("http://localhost:5173");
+  await page.goto(session.startUrl);
 
   await setupCursor(page);
 
@@ -69,5 +79,3 @@ async function run() {
 
   await browser.close();
 }
-
-run().catch(console.error);

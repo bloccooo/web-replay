@@ -1,5 +1,5 @@
-import { record, type RecordOptions } from "./recorder.js";
-import { replay } from "./replayer.js";
+import { record, type RecordOptions } from "./record.js";
+import { replay } from "./replay.js";
 
 function printUsage() {
   console.log(`
@@ -19,6 +19,7 @@ Replay options:
   --speed <multiplier>             Playback speed (default: 1.0)
   --width <px>                     Viewport width override
   --height <px>                    Viewport height override
+  --fps <number>                   Frame rate
   --fullscreen                     Launch in fullscreen kiosk mode (hides address bar)
 `);
 }
@@ -78,7 +79,6 @@ async function main() {
       fullscreen: flags["fullscreen"] === "true",
     };
     await record(url, output, recordOpts);
-
   } else if (command === "replay") {
     const file = args[0];
     if (!file) {
@@ -90,7 +90,6 @@ async function main() {
     const height = flags["height"] ? parseInt(flags["height"], 10) : undefined;
     const fullscreen = flags["fullscreen"] === "true";
     await replay(file, { speed, width, height, fullscreen });
-
   } else {
     console.error(`Unknown command: ${command}`);
     printUsage();

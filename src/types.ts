@@ -1,3 +1,5 @@
+import type { Event } from "./events";
+
 export type EventType =
   | "navigate"
   | "mousemove"
@@ -78,6 +80,6 @@ export type SessionEvent =
 export interface Session {
   version: 1;
   startUrl: string;
-  viewport: { width: number; height: number };
-  events: SessionEvent[];
+  viewport: { width: number; height: number; fullscreen: boolean };
+  events: Event[];
 }
