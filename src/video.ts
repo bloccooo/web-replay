@@ -1,10 +1,4 @@
-export async function framesToVideo(
-  frames: Buffer[],
-  fps: number,
-  output: string,
-) {
-  console.log(`encoding ${frames.length} frames at ${fps}fps`);
-
+export function createVideoEncoder(fps: number, output: string) {
   const ffmpeg = Bun.spawn({
     cmd: [
       "ffmpeg",
@@ -21,11 +15,14 @@ export async function framesToVideo(
     stderr: "inherit",
   });
 
-  for (const frame of frames) {
-    await ffmpeg.stdin.write(frame);
-  }
-  await ffmpeg.stdin.end();
-
-  const code = await ffmpeg.exited;
-  if (code !== 0) throw new Error(`ffmpeg exited with code ${code}`);
+  return {
+    async writeFrame(frame: Buffer) {
+      await ffmpeg.stdin.write(frame);
+    },
+    async finish() {
+      await ffmpeg.stdin.end();
+      const code = await ffmpeg.exited;
+      if (code !== 0) throw new Error(`ffmpeg exited with code ${code}`);
+    },
+  };
 }
