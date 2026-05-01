@@ -10,11 +10,34 @@ export async function setupDocumentReplayOverrides(page: Page) {
   await page.evaluateOnNewDocument(() => {
     window._webRecorder = {
       virtualTime: 0,
+      cursorX: 0,
+      cursorY: 0,
       requestAnimationFrameCallbacks: [],
       intervals: [],
       _intervalIdCounter: 0,
       animations: new Map(),
+      scrollTargets: new Map(),
+      scrollCurrents: new Map(),
     };
+
+    document.addEventListener("mousemove", (e) => {
+      window._webRecorder.cursorX = e.clientX;
+      window._webRecorder.cursorY = e.clientY;
+    });
+
+    function animateScroll() {
+      for (const [el, target] of window._webRecorder.scrollTargets) {
+        const current = window._webRecorder.scrollCurrents.get(el)
+          ?? { x: el.scrollLeft, y: el.scrollTop };
+        const newX = current.x + (target.x - current.x) * 0.2;
+        const newY = current.y + (target.y - current.y) * 0.2;
+        el.scrollLeft = newX;
+        el.scrollTop = newY;
+        window._webRecorder.scrollCurrents.set(el, { x: newX, y: newY });
+      }
+      requestAnimationFrame(animateScroll);
+    }
+    animateScroll();
 
     // Date override
     Date.now = () => window._webRecorder.virtualTime;

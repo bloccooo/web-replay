@@ -1,16 +1,7 @@
 import { writeFileSync } from "node:fs";
 import path from "node:path";
-import puppeteer from "puppeteer";
 import { launchBrowser } from "./browser";
-
-export type MouseEvent = {
-  type: "mousemove";
-  timestamp: number;
-  x: number;
-  y: number;
-};
-
-export type Event = MouseEvent;
+import { type Event } from "./events";
 
 async function run() {
   console.log("running");
@@ -20,7 +11,8 @@ async function run() {
     height: 730,
   });
 
-  await page.goto(`file://${path.join(__dirname, "../test.html")}`);
+  // await page.goto(`file://${path.join(__dirname, "../test.html")}`);
+  await page.goto("https://blocco.studio");
 
   const events: Event[] = [];
 
@@ -41,11 +33,34 @@ async function run() {
     },
   );
 
+  await page.exposeFunction(
+    "recordScroll",
+    (event: { scrollX: number; scrollY: number }) => {
+      events.push({
+        ...event,
+        type: "scroll",
+        timestamp: elapsed(),
+      });
+    },
+  );
+
   await page.evaluate(() => {
     const w = window as any;
 
     document.addEventListener("mousemove", (e) =>
       w.recordMouseMove({ x: e.clientX, y: e.clientY }),
+    );
+
+    document.addEventListener(
+      "scroll",
+      (e) => {
+        const target = e.target as Element;
+        w.recordScroll({
+          scrollX: target === document ? window.scrollX : target.scrollLeft,
+          scrollY: target === document ? window.scrollY : target.scrollTop,
+        });
+      },
+      { capture: true },
     );
   });
 

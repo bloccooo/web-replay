@@ -46,6 +46,23 @@
                 }
             }
 
+            @keyframes small-circle-css-animation {
+                0% {
+                    border-radius: 0%;
+                    background-color: lightsalmon;
+                }
+
+                50% {
+                    border-radius: 50%;
+                    background-color: lightseagreen;
+                }
+
+                100% {
+                    border-radius: 0%;
+                    background-color: lightsalmon;
+                }
+            }
+
             .circle-css-animation {
                 position: absolute;
                 top: 50%;
@@ -105,6 +122,84 @@
                 background-color: yellow;
                 transition: all 1s ease-in-out;
             }
+
+            .small-circles-grid {
+                display: flex;
+                flex-wrap: wrap;
+                width: 100%;
+                height: 100%;
+            }
+
+            .small-circle-css-animation {
+                width: 25%;
+                height: 25%;
+                background-color: lightsalmon;
+                animation: small-circle-css-animation 3s forwards infinite;
+            }
+
+            .small-circle-css-animation:nth-child(1) {
+                animation-delay: 0s;
+            }
+
+            .small-circle-css-animation:nth-child(2) {
+                animation-delay: 0.1s;
+            }
+
+            .small-circle-css-animation:nth-child(3) {
+                animation-delay: 0.2s;
+            }
+
+            .small-circle-css-animation:nth-child(4) {
+                animation-delay: 0.3s;
+            }
+
+            .small-circle-css-animation:nth-child(5) {
+                animation-delay: 0.4s;
+            }
+
+            .small-circle-css-animation:nth-child(6) {
+                animation-delay: 0.5s;
+            }
+
+            .small-circle-css-animation:nth-child(7) {
+                animation-delay: 0.6s;
+            }
+
+            .small-circle-css-animation:nth-child(8) {
+                animation-delay: 0.7s;
+            }
+
+            .small-circle-css-animation:nth-child(9) {
+                animation-delay: 0.8s;
+            }
+
+            .small-circle-css-animation:nth-child(10) {
+                animation-delay: 0.9s;
+            }
+
+            .small-circle-css-animation:nth-child(11) {
+                animation-delay: 1s;
+            }
+
+            .small-circle-css-animation:nth-child(12) {
+                animation-delay: 1.1s;
+            }
+
+            .small-circle-css-animation:nth-child(13) {
+                animation-delay: 1.2s;
+            }
+
+            .small-circle-css-animation:nth-child(14) {
+                animation-delay: 1.3s;
+            }
+
+            .small-circle-css-animation:nth-child(15) {
+                animation-delay: 1.4s;
+            }
+
+            .small-circle-css-animation:nth-child(16) {
+                animation-delay: 1.5s;
+            }
         </style>
     </head>
     <body>
@@ -127,7 +222,51 @@
                 <div class="interval-animation"></div>
             </div>
             <div class="cell">
+                <div class="small-circles-grid">
+                    <div class="small-circle-css-animation"></div>
+                    <div class="small-circle-css-animation"></div>
+                    <div class="small-circle-css-animation"></div>
+                    <div class="small-circle-css-animation"></div>
+                    <div class="small-circle-css-animation"></div>
+                    <div class="small-circle-css-animation"></div>
+                    <div class="small-circle-css-animation"></div>
+                    <div class="small-circle-css-animation"></div>
+                    <div class="small-circle-css-animation"></div>
+                    <div class="small-circle-css-animation"></div>
+                    <div class="small-circle-css-animation"></div>
+                    <div class="small-circle-css-animation"></div>
+                    <div class="small-circle-css-animation"></div>
+                    <div class="small-circle-css-animation"></div>
+                    <div class="small-circle-css-animation"></div>
+                    <div class="small-circle-css-animation"></div>
+                </div>
+            </div>
+            <div class="cell">
                 <div class="timeout-animation"></div>
+            </div>
+            <div class="cell">
+                <div class="circle-css-animation"></div>
+            </div>
+            <div class="cell">
+                <div class="circle-css-animation"></div>
+            </div>
+            <div class="cell">
+                <div class="circle-css-animation"></div>
+            </div>
+            <div class="cell">
+                <div class="circle-css-animation"></div>
+            </div>
+            <div class="cell">
+                <div class="circle-css-animation"></div>
+            </div>
+            <div class="cell">
+                <div class="circle-css-animation"></div>
+            </div>
+            <div class="cell">
+                <div class="circle-css-animation"></div>
+            </div>
+            <div class="cell">
+                <div class="circle-css-animation"></div>
             </div>
         </div>
 

@@ -5,6 +5,8 @@ declare global {
     _getVirtualTime: () => Promise<number>;
     _webRecorder: {
       virtualTime: number;
+      cursorX: number;
+      cursorY: number;
       requestAnimationFrameCallbacks: ((timestamp: number) => void)[];
       intervals: Array<{
         id: number;
@@ -18,6 +20,8 @@ declare global {
         Element,
         Map<string, { virtualStart: number; duration: number }>
       >;
+      scrollTargets: Map<Element, { x: number; y: number }>;
+      scrollCurrents: Map<Element, { x: number; y: number }>;
     };
   }
 }
