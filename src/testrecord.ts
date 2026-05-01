@@ -1,6 +1,7 @@
 import { writeFileSync } from "node:fs";
 import path from "node:path";
 import puppeteer from "puppeteer";
+import { launchBrowser } from "./browser";
 
 export type MouseEvent = {
   type: "mousemove";
@@ -14,20 +15,10 @@ export type Event = MouseEvent;
 async function run() {
   console.log("running");
 
-  const browser = await puppeteer.launch({
-    headless: false,
-    defaultViewport: { width: 1280, height: 720 },
-    args: [
-      "--run-all-compositor-stages-before-draw",
-      "--disable-threaded-animation",
-      "--disable-threaded-scrolling",
-      "--disable-background-timer-throttling",
-      "--disable-renderer-backgrounding",
-      "--disable-backgrounding-occluded-windows",
-    ],
+  const { browser, page } = await launchBrowser({
+    width: 1280,
+    height: 730,
   });
-
-  const page = (await browser.pages())[0]!;
 
   await page.goto(`file://${path.join(__dirname, "../test.html")}`);
 

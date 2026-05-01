@@ -35,22 +35,47 @@ export async function injectCursor(page: Page, x = 0, y = 0): Promise<void> {
       el.innerHTML = svg;
       document.documentElement.appendChild(el);
 
+      let mouseX = x;
+      let mouseY = y;
+      let targetX = x;
+      let targetY = y;
+
       // Auto-follow Puppeteer's synthetic mouse events — no round-trip needed per frame.
-      document.addEventListener("mousemove", (e) => {
-        el.style.transform = `translate(${e.clientX}px,${e.clientY}px)`;
-      }, { capture: true, passive: true });
+      document.addEventListener(
+        "mousemove",
+        (e) => {
+          targetX = e.clientX;
+          targetY = e.clientY;
+        },
+        { capture: true, passive: true },
+      );
+
+      function animateCursor() {
+        mouseX += (targetX - mouseX) * 0.3;
+        mouseY += (targetY - mouseY) * 0.3;
+
+        el.style.transform = `translate(${mouseX}px,${mouseY}px)`;
+
+        requestAnimationFrame(animateCursor);
+      }
+
+      animateCursor();
     },
-    { id: CURSOR_ID, svg: CURSOR_SVG, x, y }
+    { id: CURSOR_ID, svg: CURSOR_SVG, x, y },
   );
 }
 
 /** Force cursor to a position without a mouse event (e.g. right after navigation). */
-export async function setCursorPosition(page: Page, x: number, y: number): Promise<void> {
+export async function setCursorPosition(
+  page: Page,
+  x: number,
+  y: number,
+): Promise<void> {
   await page.evaluate(
     ({ id, x, y }: { id: string; x: number; y: number }) => {
       const el = document.getElementById(id);
       if (el) el.style.transform = `translate(${x}px,${y}px)`;
     },
-    { id: CURSOR_ID, x, y }
+    { id: CURSOR_ID, x, y },
   );
 }

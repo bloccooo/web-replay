@@ -1,100 +1,225 @@
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
 
-    <style>
-      @keyframes circle-animation {
-        0% {
-          width: 50px;
-          height: 50px;
-        }
+        <style>
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+            }
 
-        50% {
-          width: 150px;
-          height: 150px;
-        }
+            .grid {
+                box-sizing: border-box;
+                padding: 1rem;
+                width: 100%;
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1rem;
+            }
 
-        100% {
-          width: 50px;
-          height: 50px;
-        }
-      }
+            .cell {
+                width: 100%;
+                aspect-ratio: 1;
+                border: solid 1px black;
+                box-sizing: border-box;
+                position: relative;
+                overflow: hidden;
+            }
 
-      .circle {
-        position: fixed;
-        top: 0;
-        left: 0;
-        display: block;
-        width: 100px;
-        height: 100px;
-        animation: circle-animation 2s forwards infinite;
-        background-color: black;
-        border-radius: 50%;
-      }
+            @keyframes circle-css-animation {
+                0% {
+                    width: 50px;
+                    height: 50px;
+                }
 
-      .rect {
-        position: fixed;
-        top: 250px;
-        left: 0;
-        width: 200px;
-        height: 200px;
-        background-color: red;
-        transition: width 1s ease-in-out;
-      }
+                50% {
+                    width: 100%;
+                    height: 100%;
+                }
 
-      .rect:hover {
-        width: 400px;
-      }
+                100% {
+                    width: 50px;
+                    height: 50px;
+                }
+            }
 
-      .rect-anim {
-        position: fixed;
-        top: 500px;
-        left: 0;
-        width: 200px;
-        height: 200px;
-        background-color: blue;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="circle"></div>
-    <div class="rect"></div>
-    <div class="rect-anim"></div>
+            .circle-css-animation {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                display: block;
+                width: 100px;
+                height: 100px;
+                animation: circle-css-animation 2s forwards infinite;
+                transform: translate(-50%, -50%);
+                background-color: black;
+                border-radius: 50%;
+                overflow: hidden;
+            }
 
-    <script>
-      window.addEventListener("mousemove", (event) => {
-        const animations = document.getAnimations();
+            .rect-css-transition {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 200px;
+                height: 200px;
+                transform: translate(-50%, -50%);
+                background-color: red;
+                transition: all 1s ease-in-out;
+            }
 
-        // for (const animation of animations) {
-        //   if (animation instanceof CSSTransition) {
-        //     const effect = animation.effect;
-        //     const duration = effect.getTiming().duration; // in milliseconds
-        //     const delay = effect.getTiming().delay; // delay before transition starts
+            .rect-css-transition:hover {
+                width: 100%;
+                background-color: lightgreen;
+                transform: translate(-50%, -50%) rotate(90deg);
+            }
 
-        //     console.log({
-        //       property: animation.transitionProperty,
-        //       duration,
-        //       delay,
-        //       startTime: animation.startTime,
-        //       currentTime: animation.currentTime,
-        //     });
-        //   }
-        // }
-      });
+            .rect-request-animation {
+                position: absolute;
+                top: 50%;
+                left: 0;
+                width: 50%;
+                height: 50%;
+                background-color: blue;
+                transform: translate(0, -50%);
+            }
 
-      const now = Date.now();
-      const rectAnim = document.querySelector(".rect-anim");
+            .canvas-animation {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
 
-      function animate() {
-        const elapsed = (Date.now() - now) * 0.005;
-        rectAnim.style.transform = `translate(${Math.sin(elapsed) * 100 + 100}px, 0)`;
+            .interval-animation {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 20%;
+                height: 20%;
+                transform: translate(-50%, -50%);
+                background-color: yellow;
+                transition: all 1s ease-in-out;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="rect-anim"></div>
 
-        requestAnimationFrame(() => animate());
-      }
+        <div class="grid">
+            <div class="cell">
+                <div class="circle-css-animation"></div>
+            </div>
+            <div class="cell">
+                <div class="rect-css-transition"></div>
+            </div>
+            <div class="cell">
+                <div class="rect-request-animation"></div>
+            </div>
+            <div class="cell">
+                <canvas class="canvas-animation"></canvas>
+            </div>
+            <div class="cell">
+                <div class="interval-animation"></div>
+            </div>
+            <div class="cell">
+                <div class="timeout-animation"></div>
+            </div>
+        </div>
 
-      animate();
-    </script>
-  </body>
+        <script>
+            const now = Date.now();
+            const rectRequestAnimation = document.querySelector(
+                ".rect-request-animation",
+            );
+
+            function animateRectRequestAnimation() {
+                const elapsed = (Date.now() - now) * 0.002;
+                rectRequestAnimation.style.transform = `translate(${Math.sin(elapsed) * 50 + 50}%, -50%) rotate(${Math.sin(elapsed) * 90}deg)`;
+                requestAnimationFrame(() => animateRectRequestAnimation());
+            }
+
+            animateRectRequestAnimation();
+
+            const canvas = document.querySelector(".canvas-animation");
+
+            const canvasBox = canvas.getBoundingClientRect();
+            canvas.width = canvasBox.width;
+            canvas.height = canvasBox.height;
+            const ctx = canvas.getContext("2d");
+
+            const count = 40;
+            let x = canvasBox.width * 0.5;
+            let y = canvasBox.height * 0.5;
+
+            let ty = 0;
+            let tx = 0;
+
+            window.addEventListener("mousemove", (event) => {
+                const canvasBox = canvas.getBoundingClientRect();
+                tx = Math.min(
+                    canvasBox.width + canvasBox.left,
+                    Math.max(0, event.clientX - canvasBox.left),
+                );
+                ty = Math.min(
+                    canvasBox.bottom,
+                    Math.max(0, event.clientY - canvasBox.top),
+                );
+            });
+
+            function animateCanvas() {
+                const elapsed = (Date.now() - now) * 0.002;
+
+                ctx.fillStyle = "white";
+                ctx.fillRect(0, 0, canvasBox.width, canvasBox.height);
+
+                for (let i = 0; i < count; i++) {
+                    ctx.beginPath();
+                    ctx.arc(
+                        canvasBox.width * 0.5 +
+                            (x - canvasBox.width * 0.5) * ((count - i) / count),
+                        canvasBox.height * 0.5 +
+                            (y - canvasBox.height * 0.5) *
+                                ((count - i) / count),
+                        (canvas.width / count / 2) * i,
+                        0,
+                        Math.PI * 2,
+                    );
+                    ctx.closePath();
+                    ctx.stroke();
+                }
+
+                x += (tx - x) * 0.1;
+                y += (ty - y) * 0.1;
+
+                requestAnimationFrame(animateCanvas);
+            }
+
+            animateCanvas();
+
+            const intervalAnimationElement = document.querySelector(
+                ".interval-animation",
+            );
+            let intervalSwitch = true;
+            setInterval(() => {
+                if (intervalSwitch) {
+                    intervalAnimationElement.style.width = "80%";
+                    intervalAnimationElement.style.height = "80%";
+                    intervalAnimationElement.style.borderRadius = "50%";
+                    intervalAnimationElement.style.backgroundColor = "cyan";
+                } else {
+                    intervalAnimationElement.style.width = "20%";
+                    intervalAnimationElement.style.height = "20%";
+                    intervalAnimationElement.style.borderRadius = "0%";
+                    intervalAnimationElement.style.backgroundColor = "yellow";
+                }
+
+                intervalSwitch = !intervalSwitch;
+            }, 2000);
+        </script>
+    </body>
 </html>

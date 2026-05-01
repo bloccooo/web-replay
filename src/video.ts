@@ -1,32 +1,31 @@
-import { spawn } from "node:child_process";
-
 export async function framesToVideo(
   frames: Buffer[],
   fps: number,
   output: string,
 ) {
-  const ffmpeg = spawn("ffmpeg", [
-    "-f",
-    "image2pipe",
-    "-framerate",
-    String(fps),
-    "-i",
-    "pipe:0",
-    "-c:v",
-    "libx264",
-    "-pix_fmt",
-    "yuv420p",
-    "-y",
-    output,
-  ]);
+  console.log(`encoding ${frames.length} frames at ${fps}fps`);
+
+  const ffmpeg = Bun.spawn({
+    cmd: [
+      "ffmpeg",
+      "-f", "image2pipe",
+      "-framerate", String(fps),
+      "-i", "pipe:0",
+      "-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2",
+      "-c:v", "libx264",
+      "-pix_fmt", "yuv420p",
+      "-y",
+      output,
+    ],
+    stdin: "pipe",
+    stderr: "inherit",
+  });
 
   for (const frame of frames) {
-    ffmpeg.stdin.write(frame);
+    await ffmpeg.stdin.write(frame);
   }
-  ffmpeg.stdin.end();
+  await ffmpeg.stdin.end();
 
-  return new Promise((resolve, reject) => {
-    ffmpeg.on("close", resolve);
-    ffmpeg.on("error", reject);
-  });
+  const code = await ffmpeg.exited;
+  if (code !== 0) throw new Error(`ffmpeg exited with code ${code}`);
 }

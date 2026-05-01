@@ -28,7 +28,7 @@ async function measureChromeOverhead(): Promise<{
     availWidth: window.screen.availWidth,
     availHeight: window.screen.availHeight,
   }));
-  await probe.close();
+  await probe.close().catch(() => {});
   return result;
 }
 
@@ -37,6 +37,12 @@ const CHROMIUM_FLAGS = [
   "--enable-gpu-rasterization",
   "--enable-webgl",
   "--enable-webgl2",
+  "--run-all-compositor-stages-before-draw",
+  "--disable-threaded-animation",
+  "--disable-threaded-scrolling",
+  "--disable-background-timer-throttling",
+  "--disable-renderer-backgrounding",
+  "--disable-backgrounding-occluded-windows",
 ];
 
 export async function launchBrowser(
@@ -54,7 +60,6 @@ export async function launchBrowser(
       `--window-size=${opts.width! + chromeW},${opts.height! + chromeH}`,
       `--window-position=${Math.round((screenWidth - (opts.width! + chromeW)) * 0.5)},${Math.round((screenHeight - (opts.height! + chromeH)) * 0.5)}`,
     ];
-    console.log(screenWidth, screenHeight);
   } else {
     sizeArgs = ["--start-maximized"];
   }
@@ -64,6 +69,7 @@ export async function launchBrowser(
     defaultViewport: null,
     args: [...sizeArgs, ...CHROMIUM_FLAGS],
   });
+
   const page = (await browser.pages())[0]!;
 
   return { browser, page };
