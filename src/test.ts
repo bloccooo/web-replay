@@ -27,7 +27,7 @@ async function run() {
   await setupDocumentReplayOverrides(page);
 
   // await page.goto(`file://${path.join(__dirname, "../test.html")}`);
-  await page.goto("https://blocco.studio");
+  await page.goto("http://localhost:5173");
 
   await setupCursor(page);
 

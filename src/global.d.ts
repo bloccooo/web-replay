@@ -8,6 +8,11 @@ declare global {
       cursorX: number;
       cursorY: number;
       requestAnimationFrameCallbacks: ((timestamp: number) => void)[];
+      timeouts: Array<{
+        id: number;
+        scheduledAt: number;
+        callback: () => void;
+      }>;
       intervals: Array<{
         id: number;
         startTime: number;
@@ -15,7 +20,7 @@ declare global {
         callback: () => void;
         callCount: number;
       }>;
-      _intervalIdCounter: number;
+      _timerIdCounter: number;
       animations: Map<
         Element,
         Map<string, { virtualStart: number; duration: number }>

@@ -200,6 +200,20 @@
             .small-circle-css-animation:nth-child(16) {
                 animation-delay: 1.5s;
             }
+
+            input {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            .caret {
+                position: fixed;
+                height: 1rem;
+                width: 3px;
+                background-color: black;
+            }
         </style>
     </head>
     <body>
@@ -245,7 +259,7 @@
                 <div class="timeout-animation"></div>
             </div>
             <div class="cell">
-                <div class="circle-css-animation"></div>
+                <input type="email" />
             </div>
             <div class="cell">
                 <div class="circle-css-animation"></div>
@@ -268,6 +282,8 @@
             <div class="cell">
                 <div class="circle-css-animation"></div>
             </div>
+
+            <div class="caret"></div>
         </div>
 
         <script>
@@ -311,6 +327,71 @@
             });
 
             function animateCanvas() {
+                if (document.activeElement) {
+                    if (
+                        document.activeElement.tagName === "INPUT" ||
+                        document.activeElement.tagName === "TEXTAREA"
+                    ) {
+                        const start = document.activeElement.selectionStart;
+
+                        // Create an invisible overlay div mirroring the input's styles
+                        const mirror = document.createElement("div");
+                        const styles = window.getComputedStyle(
+                            document.activeElement,
+                        );
+
+                        for (const prop of styles) {
+                            mirror.style[prop] = styles[prop];
+                        }
+
+                        const inputRect =
+                            document.activeElement.getBoundingClientRect();
+                        mirror.style.position = "fixed";
+                        mirror.style.top = `${inputRect.top}px`;
+                        mirror.style.left = `${inputRect.left}px`;
+                        mirror.style.width = `${inputRect.width}px`;
+                        mirror.style.height = `${inputRect.height}px`;
+                        mirror.style.transform = "none";
+                        mirror.style.visibility = "hidden";
+                        mirror.style.whiteSpace = "pre-wrap";
+
+                        // Fill mirror with text up to caret, then inject a span
+                        const textBefore = document.activeElement.value.slice(
+                            0,
+                            start,
+                        );
+                        mirror.appendChild(document.createTextNode(textBefore));
+
+                        const caret = document.createElement("span");
+                        caret.textContent = "|"; // any character to make it measurable
+                        mirror.appendChild(caret);
+
+                        document.body.appendChild(mirror);
+                        const rect = caret.getBoundingClientRect();
+                        document.body.removeChild(mirror);
+
+                        const caretElement = document.querySelector(".caret");
+
+                        if (caretElement) {
+                            caretElement.style.top = `${rect.y}px`;
+                            caretElement.style.left = `${rect.x}px`;
+                        }
+
+                        console.log(rect);
+
+                        // return {
+                        //     element: el,
+                        //     caretPos: el.selectionStart,
+                        //     selectionStart: el.selectionStart,
+                        //     selectionEnd: el.selectionEnd,
+                        //     selectedText: el.value.slice(
+                        //         el.selectionStart,
+                        //         el.selectionEnd,
+                        //     ),
+                        // };
+                    }
+                }
+
                 const elapsed = (Date.now() - now) * 0.002;
 
                 ctx.fillStyle = "white";

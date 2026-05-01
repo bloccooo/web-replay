@@ -65,6 +65,34 @@ export async function injectCursor(page: Page, x = 0, y = 0): Promise<void> {
   );
 }
 
+export const CARET_ID = "__replay_caret__";
+
+export async function injectCustomCaret(page: Page): Promise<void> {
+  await page.evaluate(
+    ({ id }) => {
+      const style = document.createElement("style");
+      style.textContent =
+        "*, *::before, *::after { caret-color: transparent !important; }";
+      document.head.appendChild(style);
+
+      const caret = document.createElement("div");
+      caret.id = id;
+      caret.style.cssText = [
+        "position:fixed",
+        "top:0",
+        "left:0",
+        "width:1px",
+        "background:black",
+        "pointer-events:none",
+        "z-index:2147483646",
+        "display:none",
+      ].join(";");
+      document.documentElement.appendChild(caret);
+    },
+    { id: CARET_ID },
+  );
+}
+
 /** Force cursor to a position without a mouse event (e.g. right after navigation). */
 export async function setCursorPosition(
   page: Page,

@@ -12,7 +12,7 @@ async function run() {
   });
 
   // await page.goto(`file://${path.join(__dirname, "../test.html")}`);
-  await page.goto("https://blocco.studio");
+  await page.goto("http://localhost:5173");
 
   const events: Event[] = [];
 
@@ -34,6 +34,25 @@ async function run() {
   );
 
   await page.exposeFunction(
+    "recordKeyboard",
+    (event: { type: "keydown" | "keyup"; key: string; code: string }) => {
+      events.push({ ...event, timestamp: elapsed() });
+    },
+  );
+
+  await page.exposeFunction(
+    "recordMouseButton",
+    (event: {
+      type: "mousedown" | "mouseup";
+      x: number;
+      y: number;
+      button: number;
+    }) => {
+      events.push({ ...event, timestamp: elapsed() });
+    },
+  );
+
+  await page.exposeFunction(
     "recordScroll",
     (event: { scrollX: number; scrollY: number }) => {
       events.push({
@@ -49,6 +68,32 @@ async function run() {
 
     document.addEventListener("mousemove", (e) =>
       w.recordMouseMove({ x: e.clientX, y: e.clientY }),
+    );
+
+    document.addEventListener("keydown", (e) =>
+      w.recordKeyboard({ type: "keydown", key: e.key, code: e.code }),
+    );
+
+    document.addEventListener("keyup", (e) =>
+      w.recordKeyboard({ type: "keyup", key: e.key, code: e.code }),
+    );
+
+    document.addEventListener("mousedown", (e) =>
+      w.recordMouseButton({
+        type: "mousedown",
+        x: e.clientX,
+        y: e.clientY,
+        button: e.button,
+      }),
+    );
+
+    document.addEventListener("mouseup", (e) =>
+      w.recordMouseButton({
+        type: "mouseup",
+        x: e.clientX,
+        y: e.clientY,
+        button: e.button,
+      }),
     );
 
     document.addEventListener(
