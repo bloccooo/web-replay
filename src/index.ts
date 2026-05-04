@@ -23,6 +23,7 @@ Replay options:
   --fullscreen                     Launch in fullscreen kiosk mode (hides address bar)
   --no-headless                    Show the browser window during replay
   --scale <factor>                 Output resolution multiplier (default: 1, e.g. 2 for 2x)
+  --quality <level>                Output quality: high, medium, low (default: medium)
 `);
 }
 
@@ -93,7 +94,8 @@ async function main() {
     const fullscreen = flags["fullscreen"] === "true";
     const headless = flags["no-headless"] === "true" ? false : true;
     const scale = flags["scale"] ? parseFloat(flags["scale"]) : 1;
-    await replay(file, { speed, width, height, fullscreen, headless, scale });
+    const quality = flags["quality"];
+    await replay(file, { speed, width, height, fullscreen, headless, scale, quality });
   } else {
     console.error(`Unknown command: ${command}`);
     printUsage();

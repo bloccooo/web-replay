@@ -1,4 +1,7 @@
-export function createVideoEncoder(fps: number, output: string, width: number, height: number) {
+const QUALITY_CRF: Record<string, number> = { high: 18, medium: 23, low: 28 };
+
+export function createVideoEncoder(fps: number, output: string, width: number, height: number, quality: string = "medium") {
+  const crf = QUALITY_CRF[quality] ?? 23;
   const ffmpeg = Bun.spawn({
     cmd: [
       "ffmpeg",
@@ -7,6 +10,7 @@ export function createVideoEncoder(fps: number, output: string, width: number, h
       "-i", "pipe:0",
       "-vf", `scale=trunc(${width}/2)*2:trunc(${height}/2)*2`,
       "-c:v", "libx264",
+      "-crf", String(crf),
       "-pix_fmt", "yuv420p",
       "-y",
       output,

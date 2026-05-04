@@ -203,11 +203,14 @@ export async function evaluateFrameState(page: Page) {
       const existing = byKey.get(key);
       if (!existing || existing.animationRef !== animation) {
         const timing = animation.effect!.getTiming();
+        const delay = (timing.delay as number) || 0;
         const duration = timing.duration as number;
         const iterations = timing.iterations ?? 1;
         byKey.set(key, {
           virtualStart: window._webRecorder.virtualTime,
-          duration: iterations === Infinity ? Infinity : duration * iterations,
+          // Include delay so we don't prematurely evict the entry while the
+          // animation is still in its delay phase (currentTime < delay).
+          duration: iterations === Infinity ? Infinity : delay + duration * iterations,
           animationRef: animation,
         });
       }
@@ -254,6 +257,9 @@ export async function evaluateFrame(page: Page) {
           } else {
             animation.currentTime = elapsed;
             if (duration !== Infinity && elapsed >= duration) {
+              // finish() removes the animation from document.getAnimations() so
+              // evaluateFrameState won't re-register it and restart it next frame.
+              animation.finish();
               byKey.delete(key);
             }
           }

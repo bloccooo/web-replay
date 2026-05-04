@@ -19,6 +19,7 @@ export interface ReplayOptions {
   fps?: number;
   headless?: boolean;
   scale?: number;
+  quality?: string;
 }
 
 export async function replay(sessionPath: string, opts: ReplayOptions = {}) {
@@ -55,6 +56,7 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}) {
     "output.mp4",
     session.viewport.width * scale,
     session.viewport.height * scale,
+    opts.quality,
   );
 
   const totalDuration = Math.max(...events.map((e) => e.timestamp));
