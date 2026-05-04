@@ -16,12 +16,14 @@ export async function applyEvent(page: Page, event: Event) {
     await page.keyboard.down(event.key as KeyInput);
   } else if (event.type === "keyup") {
     await page.keyboard.up(event.key as KeyInput);
-  } else if (event.type === "mousedown") {
+  } else if (event.type === "mousedown" || event.type === "pointerdown") {
     await page.mouse.move(event.x, event.y);
     await page.mouse.down({ button: buttonName(event.button) });
-  } else if (event.type === "mouseup") {
+  } else if (event.type === "mouseup" || event.type === "pointerup") {
     await page.mouse.move(event.x, event.y);
     await page.mouse.up({ button: buttonName(event.button) });
+  } else if (event.type === "click") {
+    await page.mouse.click(event.x, event.y, { button: buttonName(event.button) });
   } else if (event.type === "scroll") {
     await page.evaluate(
       ({ scrollX, scrollY, selector }) => {
@@ -40,12 +42,15 @@ export async function applyEvent(page: Page, event: Event) {
   }
 }
 
-export async function setupDocumentReplayOverrides(page: Page) {
+export async function setupDocumentReplayOverrides(
+  page: Page,
+  scrollSmoothing = 6,
+) {
   await page.exposeFunction("_getVirtualTime", () => {
     return virtualTimer.get();
   });
 
-  await page.evaluateOnNewDocument(() => {
+  await page.evaluateOnNewDocument((scrollSmoothing: number) => {
     // Save native scroll APIs before overriding them
     const _nativeElementScroll = Element.prototype.scroll as (
       options: ScrollToOptions,
@@ -80,7 +85,7 @@ export async function setupDocumentReplayOverrides(page: Page) {
       window._webRecorder.cursorY = e.clientY;
     });
 
-    const SCROLL_SMOOTHING = 3; // higher = snappier, lower = more gradual
+    const SCROLL_SMOOTHING = scrollSmoothing;
     let scrollPrevTimestamp = 0;
     function animateScroll(timestamp: number) {
       const deltaTime = timestamp - scrollPrevTimestamp;
@@ -158,10 +163,14 @@ export async function setupDocumentReplayOverrides(page: Page) {
         (i) => i.id !== id,
       );
     }) as unknown as typeof window.clearInterval;
-  });
+  }, scrollSmoothing);
 }
 
-export async function setupCursor(page: Page, showCursor = true) {
+export async function setupCursor(
+  page: Page,
+  showCursor = true,
+  cursorSmoothing = 10,
+) {
   await page.evaluate(() => {
     const style = document.createElement("style");
     style.textContent =
@@ -170,7 +179,7 @@ export async function setupCursor(page: Page, showCursor = true) {
     document.documentElement.spellcheck = false;
   });
 
-  if (showCursor) await injectCursor(page, 0, 0);
+  if (showCursor) await injectCursor(page, 0, 0, cursorSmoothing);
   await injectCustomCaret(page);
 }
 
@@ -210,7 +219,8 @@ export async function evaluateFrameState(page: Page) {
           virtualStart: window._webRecorder.virtualTime,
           // Include delay so we don't prematurely evict the entry while the
           // animation is still in its delay phase (currentTime < delay).
-          duration: iterations === Infinity ? Infinity : delay + duration * iterations,
+          duration:
+            iterations === Infinity ? Infinity : delay + duration * iterations,
           animationRef: animation,
         });
       }

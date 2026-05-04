@@ -22,6 +22,8 @@ export interface ReplayOptions {
   quality?: string;
   cursor?: boolean;
   duration?: number;
+  scrollSmoothing?: number;
+  cursorSmoothing?: number;
 }
 
 export async function replay(sessionPath: string, opts: ReplayOptions = {}) {
@@ -47,11 +49,11 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}) {
     deviceScaleFactor: scale,
   });
 
-  await setupDocumentReplayOverrides(page);
+  await setupDocumentReplayOverrides(page, opts.scrollSmoothing);
 
   await page.goto(session.startUrl);
 
-  await setupCursor(page, opts.cursor ?? true);
+  await setupCursor(page, opts.cursor ?? true, opts.cursorSmoothing);
 
   const encoder = createVideoEncoder(
     fps,

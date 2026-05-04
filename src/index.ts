@@ -27,6 +27,8 @@ Replay options:
   --quality <level>                Output quality: high, medium, low (default: medium)
   --no-cursor                      Hide the cursor in the output video
   --duration <seconds>             Stop replay after this many seconds
+  --scroll-smoothing <number>      Scroll interpolation factor (default: 6, higher = snappier)
+  --cursor-smoothing <number>      Cursor interpolation factor (default: 10, higher = snappier)
 `);
 }
 
@@ -105,7 +107,9 @@ async function main() {
     const quality = flags["quality"];
     const cursor = flags["no-cursor"] !== "true";
     const duration = flags["duration"] ? parseFloat(flags["duration"]) : undefined;
-    await replay(file, { speed, width, height, fullscreen, headless, scale, quality, cursor, duration });
+    const scrollSmoothing = flags["scroll-smoothing"] ? parseFloat(flags["scroll-smoothing"]) : undefined;
+    const cursorSmoothing = flags["cursor-smoothing"] ? parseFloat(flags["cursor-smoothing"]) : undefined;
+    await replay(file, { speed, width, height, fullscreen, headless, scale, quality, cursor, duration, scrollSmoothing, cursorSmoothing });
   } else {
     console.error(`Unknown command: ${command}`);
     printUsage();

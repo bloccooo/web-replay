@@ -23,13 +23,6 @@ export async function record(
     fullscreen,
   });
 
-  await page.goto(startUrl);
-
-  const viewport = await page.evaluate(() => ({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  }));
-
   const events: Event[] = [];
 
   const startTime = performance.now();
@@ -59,12 +52,32 @@ export async function record(
   await page.exposeFunction(
     "recordMouseButton",
     (event: {
-      type: "mousedown" | "mouseup";
+      type: "mousedown" | "mouseup" | "pointerdown" | "pointerup" | "click";
       x: number;
       y: number;
       button: number;
     }) => {
-      events.push({ ...event, timestamp: elapsed() });
+      const timestamp = elapsed();
+      if (event.type === "click") {
+        // Strip the preceding pointerdown/pointerup only if there are no other
+        // events between them and the click (a mousemove in between = drag, not a tap).
+        const candidates: number[] = [];
+        let clean = true;
+        for (let i = events.length - 1; i >= 0; i--) {
+          const e = events[i];
+          if (timestamp - (e?.timestamp || 0) > 200) break;
+          if (e?.type === "pointerdown" || e?.type === "pointerup") {
+            candidates.push(i);
+          } else {
+            clean = false;
+            break;
+          }
+        }
+        if (clean) {
+          for (const i of candidates) events.splice(i, 1);
+        }
+      }
+      events.push({ ...event, timestamp });
     },
   );
 
@@ -79,7 +92,8 @@ export async function record(
     },
   );
 
-  await page.evaluate(() => {
+  // Use evaluateOnNewDocument so listeners survive cross-page navigations.
+  await page.evaluateOnNewDocument(() => {
     const w = window as any;
 
     function getElementSelector(el: Element): string {
@@ -106,40 +120,76 @@ export async function record(
       return path.join(" > ");
     }
 
-    document.addEventListener("mousemove", (e) =>
-      w.recordMouseMove({ x: e.clientX, y: e.clientY }),
+    document.addEventListener(
+      "mousemove",
+      (e) => w.recordMouseMove({ x: e.clientX, y: e.clientY }),
+      { capture: true, passive: true },
     );
 
-    document.addEventListener("keydown", (e) =>
-      w.recordKeyboard({ type: "keydown", key: e.key, code: e.code }),
+    document.addEventListener(
+      "keydown",
+      (e) => w.recordKeyboard({ type: "keydown", key: e.key, code: e.code }),
+      { capture: true, passive: true },
     );
 
-    document.addEventListener("keyup", (e) =>
-      w.recordKeyboard({ type: "keyup", key: e.key, code: e.code }),
+    document.addEventListener(
+      "keyup",
+      (e) => w.recordKeyboard({ type: "keyup", key: e.key, code: e.code }),
+      { capture: true, passive: true },
     );
 
-    document.addEventListener("mousedown", (e) =>
-      w.recordMouseButton({
-        type: "mousedown",
-        x: e.clientX,
-        y: e.clientY,
-        button: e.button,
-      }),
+    // Use pointerdown/pointerup instead of mousedown/mouseup — some libraries
+    // (e.g. Swiper with touch-action set) suppress the mouse compat events entirely.
+
+    document.addEventListener(
+      "pointerdown",
+      (e) => {
+        if (!e.isPrimary) return;
+        w.recordMouseButton({
+          type: "pointerdown",
+          x: e.clientX,
+          y: e.clientY,
+          button: e.button,
+        });
+      },
+      { capture: true, passive: true },
     );
 
-    document.addEventListener("mouseup", (e) =>
-      w.recordMouseButton({
-        type: "mouseup",
-        x: e.clientX,
-        y: e.clientY,
-        button: e.button,
-      }),
+    document.addEventListener(
+      "pointerup",
+      (e) => {
+        if (!e.isPrimary) return;
+        w.recordMouseButton({
+          type: "pointerup",
+          x: e.clientX,
+          y: e.clientY,
+          button: e.button,
+        });
+      },
+      { capture: true, passive: true },
+    );
+
+    document.addEventListener(
+      "click",
+      (e) => {
+        w.recordMouseButton({
+          type: "click",
+          x: e.clientX,
+          y: e.clientY,
+          button: e.button,
+        });
+      },
+      { capture: true, passive: true },
     );
 
     let lastUserInputTime = 0;
-    document.addEventListener("wheel", (e) => {
-      lastUserInputTime = Date.now();
-    });
+    document.addEventListener(
+      "wheel",
+      (e) => {
+        lastUserInputTime = Date.now();
+      },
+      { capture: true, passive: true },
+    );
 
     document.addEventListener(
       "scroll",
@@ -156,9 +206,16 @@ export async function record(
           selector: getElementSelector(el),
         });
       },
-      { capture: true },
+      { capture: true, passive: true },
     );
   });
+
+  await page.goto(startUrl);
+
+  const viewport = await page.evaluate(() => ({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  }));
 
   await new Promise<void>((resolve) => {
     browser.on("disconnected", resolve);

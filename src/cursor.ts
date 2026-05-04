@@ -15,9 +15,9 @@ const CURSOR_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="3
         filter="url(#cs)"/>
 </svg>`;
 
-export async function injectCursor(page: Page, x = 0, y = 0): Promise<void> {
+export async function injectCursor(page: Page, x = 0, y = 0, smoothing = 10): Promise<void> {
   await page.evaluate(
-    ({ id, svg, x, y }: { id: string; svg: string; x: number; y: number }) => {
+    ({ id, svg, x, y, smoothing }: { id: string; svg: string; x: number; y: number; smoothing: number }) => {
       if (document.getElementById(id)) return;
       const el = document.createElement("div");
       el.id = id;
@@ -39,8 +39,8 @@ export async function injectCursor(page: Page, x = 0, y = 0): Promise<void> {
       let mouseY = y;
       let targetX = x;
       let targetY = y;
+      let prevTimestamp = 0;
 
-      // Auto-follow Puppeteer's synthetic mouse events — no round-trip needed per frame.
       document.addEventListener(
         "mousemove",
         (e) => {
@@ -50,18 +50,22 @@ export async function injectCursor(page: Page, x = 0, y = 0): Promise<void> {
         { capture: true, passive: true },
       );
 
-      function animateCursor() {
-        mouseX += (targetX - mouseX) * 0.3;
-        mouseY += (targetY - mouseY) * 0.3;
+      function animateCursor(timestamp: number) {
+        const deltaTime = prevTimestamp === 0 ? 0 : timestamp - prevTimestamp;
+        prevTimestamp = timestamp;
+
+        const factor = deltaTime === 0 ? 0 : 1 - Math.exp((-smoothing * deltaTime) / 1000);
+        mouseX += (targetX - mouseX) * factor;
+        mouseY += (targetY - mouseY) * factor;
 
         el.style.transform = `translate(${mouseX}px,${mouseY}px)`;
 
         requestAnimationFrame(animateCursor);
       }
 
-      animateCursor();
+      animateCursor(0);
     },
-    { id: CURSOR_ID, svg: CURSOR_SVG, x, y },
+    { id: CURSOR_ID, svg: CURSOR_SVG, x, y, smoothing },
   );
 }
 

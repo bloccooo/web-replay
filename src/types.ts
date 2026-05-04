@@ -14,7 +14,7 @@ export type ScrollEvent = {
 };
 
 export type MouseButtonEvent = {
-  type: "mousedown" | "mouseup";
+  type: "mousedown" | "mouseup" | "pointerdown" | "pointerup" | "click";
   timestamp: number;
   x: number;
   y: number;
@@ -28,7 +28,13 @@ export type KeyboardEvent = {
   code: string;
 };
 
-export type Event = MouseEvent | MouseButtonEvent | ScrollEvent | KeyboardEvent;
+export type NavigationEvent = {
+  type: "navigation";
+  timestamp: number;
+  url: string;
+};
+
+export type Event = MouseEvent | MouseButtonEvent | ScrollEvent | KeyboardEvent | NavigationEvent;
 
 export interface Session {
   version: 1;
