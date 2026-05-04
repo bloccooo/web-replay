@@ -9,21 +9,31 @@ function buttonName(button: number): "left" | "middle" | "right" {
   return "left";
 }
 
+function validCoords(x: number, y: number) {
+  return Number.isFinite(x) && Number.isFinite(y);
+}
+
 export async function applyEvent(page: Page, event: Event) {
   if (event.type === "mousemove") {
+    if (!validCoords(event.x, event.y)) return;
     await page.mouse.move(event.x, event.y);
   } else if (event.type === "keydown") {
     await page.keyboard.down(event.key as KeyInput);
   } else if (event.type === "keyup") {
     await page.keyboard.up(event.key as KeyInput);
   } else if (event.type === "mousedown" || event.type === "pointerdown") {
+    if (!validCoords(event.x, event.y)) return;
     await page.mouse.move(event.x, event.y);
     await page.mouse.down({ button: buttonName(event.button) });
   } else if (event.type === "mouseup" || event.type === "pointerup") {
+    if (!validCoords(event.x, event.y)) return;
     await page.mouse.move(event.x, event.y);
     await page.mouse.up({ button: buttonName(event.button) });
   } else if (event.type === "click") {
-    await page.mouse.click(event.x, event.y, { button: buttonName(event.button) });
+    if (!validCoords(event.x, event.y)) return;
+    await page.mouse.click(event.x, event.y, {
+      button: buttonName(event.button),
+    });
   } else if (event.type === "scroll") {
     await page.evaluate(
       ({ scrollX, scrollY, selector }) => {
@@ -44,7 +54,7 @@ export async function applyEvent(page: Page, event: Event) {
 
 export async function setupDocumentReplayOverrides(
   page: Page,
-  scrollSmoothing = 6,
+  scrollSmoothing = 12,
 ) {
   await page.exposeFunction("_getVirtualTime", () => {
     return virtualTimer.get();

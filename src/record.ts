@@ -8,6 +8,48 @@ export interface RecordOptions {
   fullscreen?: boolean;
 }
 
+function hasValidCoords(event: Event): boolean {
+  if (!("x" in event)) return true;
+  return Number.isFinite((event as any).x) && Number.isFinite((event as any).y);
+}
+
+function sanitizeEvents(events: Event[]): Event[] {
+  const out: Event[] = [];
+  let isDown = false;
+
+  for (const event of events) {
+    if (!hasValidCoords(event)) continue;
+    if (event.type === "pointerdown" || event.type === "mousedown") {
+      if (isDown) continue; // duplicate down — drop
+      isDown = true;
+      out.push(event);
+    } else if (event.type === "pointerup" || event.type === "mouseup") {
+      if (!isDown) continue; // orphan up — drop
+      isDown = false;
+      out.push(event);
+    } else if (event.type === "click") {
+      if (isDown) continue; // click while logically down — drop
+      // Strip preceding down/up if they're contiguous (nothing else between them
+      // and this click — any intervening event means it was a drag, not a tap).
+      const candidates: number[] = [];
+      for (let i = out.length - 1; i >= 0; i--) {
+        const t = out[i]!.type;
+        if (t === "pointerdown" || t === "pointerup" || t === "mousedown" || t === "mouseup") {
+          candidates.push(i);
+        } else {
+          break;
+        }
+      }
+      for (const i of candidates) out.splice(i, 1);
+      out.push(event);
+    } else {
+      out.push(event);
+    }
+  }
+
+  return out;
+}
+
 export async function record(
   startUrl: string,
   outputPath: string,
@@ -57,27 +99,7 @@ export async function record(
       y: number;
       button: number;
     }) => {
-      const timestamp = elapsed();
-      if (event.type === "click") {
-        // Strip the preceding pointerdown/pointerup only if there are no other
-        // events between them and the click (a mousemove in between = drag, not a tap).
-        const candidates: number[] = [];
-        let clean = true;
-        for (let i = events.length - 1; i >= 0; i--) {
-          const e = events[i];
-          if (timestamp - (e?.timestamp || 0) > 200) break;
-          if (e?.type === "pointerdown" || e?.type === "pointerup") {
-            candidates.push(i);
-          } else {
-            clean = false;
-            break;
-          }
-        }
-        if (clean) {
-          for (const i of candidates) events.splice(i, 1);
-        }
-      }
-      events.push({ ...event, timestamp });
+      events.push({ ...event, timestamp: elapsed() });
     },
   );
 
@@ -229,7 +251,7 @@ export async function record(
       height: viewport.height,
       fullscreen,
     },
-    events,
+    events: sanitizeEvents(events),
   };
 
   writeFileSync(outputPath, JSON.stringify(session, null, 2));
