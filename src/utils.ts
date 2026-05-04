@@ -184,7 +184,7 @@ export async function setupCursor(
   await page.evaluate(() => {
     const style = document.createElement("style");
     style.textContent =
-      "* { cursor: none !important; scroll-behavior: auto !important; }";
+      "* { cursor: none !important; scroll-behavior: auto !important; scrollbar-width: none !important; } ::-webkit-scrollbar { display: none !important; }";
     document.head?.appendChild(style);
     document.documentElement.spellcheck = false;
   });

@@ -34,6 +34,7 @@ async function measureChromeOverhead(): Promise<{
 }
 
 const CHROMIUM_FLAGS = [
+  "--hide-scrollbars",
   "--ignore-gpu-blocklist",
   "--enable-gpu-rasterization",
   "--enable-webgl",
