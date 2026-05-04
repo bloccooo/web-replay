@@ -93,19 +93,18 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}) {
     process.stdout.write(`\rReplaying  [${bar}] ${pctStr}  ${cur}s / ${tot}s`);
   }
 
-  function hasMoreEvents() {
-    const vt = virtualTimer.get();
-    return vt < maxTime && events.some((event) => event.timestamp > vt);
-  }
+  // Events are timestamp-sorted; use a pointer so each frame is O(k) not O(n).
+  let eventIdx = 0;
 
-  while (hasMoreEvents()) {
+  while (virtualTimer.get() < maxTime && eventIdx < events.length) {
     const virtualTime = virtualTimer.get();
+    const windowEnd = virtualTime + interval;
 
-    const currentEvents = events.filter(
-      (event) =>
-        event.timestamp >= virtualTime &&
-        event.timestamp < virtualTime + interval,
-    );
+    const currentEvents: typeof events = [];
+    while (eventIdx < events.length && events[eventIdx]!.timestamp < windowEnd) {
+      currentEvents.push(events[eventIdx]!);
+      eventIdx++;
+    }
 
     for (const event of currentEvents) {
       await applyEvent(page, event);
