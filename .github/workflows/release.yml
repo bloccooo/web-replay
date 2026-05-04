@@ -22,15 +22,39 @@ jobs:
           CURRENT=$(jq -r .version package.json)
           PREVIOUS=$(git show HEAD~1:package.json 2>/dev/null | jq -r .version || echo "")
           echo "current=$CURRENT" >> $GITHUB_OUTPUT
-          echo "previous=$PREVIOUS" >> $GITHUB_OUTPUT
           if [ "$CURRENT" != "$PREVIOUS" ]; then
             echo "bumped=true" >> $GITHUB_OUTPUT
           else
             echo "bumped=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Create tag
+      - uses: oven-sh/setup-bun@v2
         if: steps.version.outputs.bumped == 'true'
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        if: steps.version.outputs.bumped == 'true'
+        run: bun install
+
+      - name: Build binaries
+        if: steps.version.outputs.bumped == 'true'
+        run: |
+          mkdir -p dist
+          bun build --compile --target=bun-linux-x64    src/index.ts --outfile dist/wsr-linux-x64
+          bun build --compile --target=bun-darwin-x64   src/index.ts --outfile dist/wsr-macos-x64
+          bun build --compile --target=bun-darwin-arm64 src/index.ts --outfile dist/wsr-macos-arm64
+
+      - name: Tag and release
+        if: steps.version.outputs.bumped == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           git tag "v${{ steps.version.outputs.current }}"
           git push origin "v${{ steps.version.outputs.current }}"
+          gh release create "v${{ steps.version.outputs.current }}" \
+            --title "v${{ steps.version.outputs.current }}" \
+            --generate-notes \
+            dist/wsr-linux-x64 \
+            dist/wsr-macos-x64 \
+            dist/wsr-macos-arm64
