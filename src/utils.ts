@@ -161,7 +161,7 @@ export async function setupDocumentReplayOverrides(page: Page) {
   });
 }
 
-export async function setupCursor(page: Page) {
+export async function setupCursor(page: Page, showCursor = true) {
   await page.evaluate(() => {
     const style = document.createElement("style");
     style.textContent =
@@ -170,7 +170,7 @@ export async function setupCursor(page: Page) {
     document.documentElement.spellcheck = false;
   });
 
-  await injectCursor(page, 0, 0);
+  if (showCursor) await injectCursor(page, 0, 0);
   await injectCustomCaret(page);
 }
 

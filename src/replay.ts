@@ -20,6 +20,8 @@ export interface ReplayOptions {
   headless?: boolean;
   scale?: number;
   quality?: string;
+  cursor?: boolean;
+  duration?: number;
 }
 
 export async function replay(sessionPath: string, opts: ReplayOptions = {}) {
@@ -49,7 +51,7 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}) {
 
   await page.goto(session.startUrl);
 
-  await setupCursor(page);
+  await setupCursor(page, opts.cursor ?? true);
 
   const encoder = createVideoEncoder(
     fps,
@@ -59,7 +61,9 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}) {
     opts.quality,
   );
 
-  const totalDuration = Math.max(...events.map((e) => e.timestamp));
+  const sessionDuration = Math.max(...events.map((e) => e.timestamp));
+  const maxTime = opts.duration != null ? opts.duration * 1000 : sessionDuration;
+  const totalDuration = Math.min(maxTime, sessionDuration);
 
   function renderProgress(virtualTime: number) {
     const pct = Math.min(virtualTime / totalDuration, 1);
@@ -73,7 +77,8 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}) {
   }
 
   function hasMoreEvents() {
-    return events.some((event) => event.timestamp > virtualTimer.get());
+    const vt = virtualTimer.get();
+    return vt < maxTime && events.some((event) => event.timestamp > vt);
   }
 
   while (hasMoreEvents()) {

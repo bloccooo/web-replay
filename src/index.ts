@@ -24,6 +24,8 @@ Replay options:
   --no-headless                    Show the browser window during replay
   --scale <factor>                 Output resolution multiplier (default: 1, e.g. 2 for 2x)
   --quality <level>                Output quality: high, medium, low (default: medium)
+  --no-cursor                      Hide the cursor in the output video
+  --duration <seconds>             Stop replay after this many seconds
 `);
 }
 
@@ -95,7 +97,9 @@ async function main() {
     const headless = flags["no-headless"] === "true" ? false : true;
     const scale = flags["scale"] ? parseFloat(flags["scale"]) : 1;
     const quality = flags["quality"];
-    await replay(file, { speed, width, height, fullscreen, headless, scale, quality });
+    const cursor = flags["no-cursor"] !== "true";
+    const duration = flags["duration"] ? parseFloat(flags["duration"]) : undefined;
+    await replay(file, { speed, width, height, fullscreen, headless, scale, quality, cursor, duration });
   } else {
     console.error(`Unknown command: ${command}`);
     printUsage();
