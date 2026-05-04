@@ -1,5 +1,6 @@
 import { record, type RecordOptions } from "./record.js";
 import { replay } from "./replay.js";
+import pkg from "../package.json";
 
 function printUsage() {
   console.log(`
@@ -63,6 +64,11 @@ function parseArgs(argv: string[]): {
 
 async function main() {
   const argv = process.argv.slice(2);
+
+  if (argv[0] === "--version" || argv[0] === "-v") {
+    console.log(pkg.version);
+    process.exit(0);
+  }
 
   if (argv.length === 0 || argv[0] === "--help" || argv[0] === "-h") {
     printUsage();
