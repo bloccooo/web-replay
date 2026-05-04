@@ -8,9 +8,12 @@ export interface RecordOptions {
   fullscreen?: boolean;
 }
 
+const COORD_EVENTS = new Set(["mousemove", "mousedown", "mouseup", "pointerdown", "pointerup", "click"]);
+
 function hasValidCoords(event: Event): boolean {
-  if (!("x" in event) || !("y" in event)) return true;
-  return Number.isFinite((event as any).x) && Number.isFinite((event as any).y);
+  if (!COORD_EVENTS.has(event.type)) return true;
+  const { x, y } = event as any;
+  return Number.isFinite(x) && Number.isFinite(y);
 }
 
 function sanitizeEvents(events: Event[]): Event[] {
