@@ -9,7 +9,7 @@ export interface RecordOptions {
 }
 
 function hasValidCoords(event: Event): boolean {
-  if (!("x" in event)) return true;
+  if (!("x" in event) || !("y" in event)) return true;
   return Number.isFinite((event as any).x) && Number.isFinite((event as any).y);
 }
 
@@ -29,18 +29,26 @@ function sanitizeEvents(events: Event[]): Event[] {
       out.push(event);
     } else if (event.type === "click") {
       if (isDown) continue; // click while logically down — drop
-      // Strip preceding down/up if they're contiguous (nothing else between them
-      // and this click — any intervening event means it was a drag, not a tap).
+      // Strip preceding down/up only if contiguous AND the last up is within
+      // 500ms of this click. A slow deliberate hold keeps its down/up events.
       const candidates: number[] = [];
       for (let i = out.length - 1; i >= 0; i--) {
         const t = out[i]!.type;
-        if (t === "pointerdown" || t === "pointerup" || t === "mousedown" || t === "mouseup") {
+        if (
+          t === "pointerdown" ||
+          t === "pointerup" ||
+          t === "mousedown" ||
+          t === "mouseup"
+        ) {
           candidates.push(i);
         } else {
           break;
         }
       }
-      for (const i of candidates) out.splice(i, 1);
+      const lastUp = candidates.length > 0 ? out[candidates[0]!] : null;
+      if (lastUp && event.timestamp - lastUp.timestamp <= 500) {
+        for (const i of candidates) out.splice(i, 1);
+      }
       out.push(event);
     } else {
       out.push(event);
