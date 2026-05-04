@@ -32,25 +32,22 @@ function sanitizeEvents(events: Event[]): Event[] {
       out.push(event);
     } else if (event.type === "click") {
       if (isDown) continue; // click while logically down — drop
-      // Strip preceding down/up only if contiguous AND the last up is within
-      // 500ms of this click. A slow deliberate hold keeps its down/up events.
-      const candidates: number[] = [];
+      // Find the most recent pointerup. If it's within 500ms of the click it
+      // was a tap — also find and remove the matching pointerdown (which may
+      // be further back than 500ms if the user held the button a while).
+      let upIdx = -1;
       for (let i = out.length - 1; i >= 0; i--) {
         const t = out[i]!.type;
-        if (
-          t === "pointerdown" ||
-          t === "pointerup" ||
-          t === "mousedown" ||
-          t === "mouseup"
-        ) {
-          candidates.push(i);
-        } else {
-          break;
-        }
+        if (t === "pointerup" || t === "mouseup") { upIdx = i; break; }
       }
-      const lastUp = candidates.length > 0 ? out[candidates[0]!] : null;
-      if (lastUp && event.timestamp - lastUp.timestamp <= 500) {
-        for (const i of candidates) out.splice(i, 1);
+      if (upIdx !== -1 && event.timestamp - out[upIdx]!.timestamp <= 500) {
+        let downIdx = -1;
+        for (let i = upIdx - 1; i >= 0; i--) {
+          const t = out[i]!.type;
+          if (t === "pointerdown" || t === "mousedown") { downIdx = i; break; }
+        }
+        out.splice(upIdx, 1);
+        if (downIdx !== -1) out.splice(downIdx, 1);
       }
       out.push(event);
     } else {
