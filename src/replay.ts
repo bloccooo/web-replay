@@ -5,6 +5,7 @@ import { virtualTimer } from "./virtualTimer";
 import {
   setupDocumentReplayOverrides,
   setupCursor,
+  reinjectCursor,
   evaluateFrameState,
   evaluateFrame,
   applyEvent,
@@ -53,7 +54,21 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}) {
 
   await page.goto(session.startUrl);
 
-  await setupCursor(page, opts.cursor ?? true, opts.cursorSmoothing);
+  const showCursor = opts.cursor ?? true;
+  const cursorSmoothing = opts.cursorSmoothing;
+
+  const firstCoordEvent = events.find(
+    (e) => "x" in e && Number.isFinite((e as any).x),
+  );
+  let lastCursorX = firstCoordEvent ? (firstCoordEvent as any).x : 0;
+  let lastCursorY = firstCoordEvent ? (firstCoordEvent as any).y : 0;
+
+  await setupCursor(page, showCursor, cursorSmoothing, lastCursorX, lastCursorY);
+
+  page.on("framenavigated", async (frame) => {
+    if (frame.parentFrame() !== null) return;
+    await reinjectCursor(page, lastCursorX, lastCursorY, showCursor, cursorSmoothing);
+  });
 
   const encoder = createVideoEncoder(
     fps,
@@ -94,6 +109,10 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}) {
 
     for (const event of currentEvents) {
       await applyEvent(page, event);
+      if ("x" in event && Number.isFinite((event as any).x)) {
+        lastCursorX = (event as any).x;
+        lastCursorY = (event as any).y;
+      }
     }
 
     await evaluateFrameState(page);

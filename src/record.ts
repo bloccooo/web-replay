@@ -32,9 +32,7 @@ function sanitizeEvents(events: Event[]): Event[] {
       out.push(event);
     } else if (event.type === "click") {
       if (isDown) continue; // click while logically down — drop
-      // Find the most recent pointerup. If it's within 500ms of the click it
-      // was a tap — also find and remove the matching pointerdown (which may
-      // be further back than 500ms if the user held the button a while).
+      // Find the most recent pointerup within 500ms of this click.
       let upIdx = -1;
       for (let i = out.length - 1; i >= 0; i--) {
         const t = out[i]!.type;
@@ -46,6 +44,15 @@ function sanitizeEvents(events: Event[]): Event[] {
           const t = out[i]!.type;
           if (t === "pointerdown" || t === "mousedown") { downIdx = i; break; }
         }
+        const downEvent = downIdx !== -1 ? out[downIdx] : null;
+        const dx = downEvent ? event.x - (downEvent as any).x : 0;
+        const dy = downEvent ? event.y - (downEvent as any).y : 0;
+        const movedFar = Math.sqrt(dx * dx + dy * dy) >= 5;
+        if (movedFar) {
+          // Drag followed by a spurious click — keep down/up, drop the click.
+          continue;
+        }
+        // Normal tap/click — strip down/up and use the click event.
         out.splice(upIdx, 1);
         if (downIdx !== -1) out.splice(downIdx, 1);
       }

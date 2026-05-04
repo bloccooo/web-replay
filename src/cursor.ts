@@ -77,7 +77,7 @@ export async function injectCustomCaret(page: Page): Promise<void> {
       const style = document.createElement("style");
       style.textContent =
         "*, *::before, *::after { caret-color: transparent !important; }";
-      document.head.appendChild(style);
+      (document.head ?? document.documentElement).appendChild(style);
 
       const caret = document.createElement("div");
       caret.id = id;

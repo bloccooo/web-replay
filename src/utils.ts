@@ -176,20 +176,44 @@ export async function setupDocumentReplayOverrides(
   }, scrollSmoothing);
 }
 
+const CURSOR_CSS =
+  "* { cursor: none !important; scroll-behavior: auto !important; scrollbar-width: none !important; } ::-webkit-scrollbar { display: none !important; }";
+
 export async function setupCursor(
   page: Page,
   showCursor = true,
   cursorSmoothing = 10,
+  initialX = 0,
+  initialY = 0,
 ) {
-  await page.evaluate(() => {
+  // Survive navigations
+  await page.evaluateOnNewDocument((css: string) => {
     const style = document.createElement("style");
-    style.textContent =
-      "* { cursor: none !important; scroll-behavior: auto !important; scrollbar-width: none !important; } ::-webkit-scrollbar { display: none !important; }";
+    style.textContent = css;
+    document.documentElement.appendChild(style);
+    document.documentElement.spellcheck = false;
+  }, CURSOR_CSS);
+
+  // Apply to current page
+  await page.evaluate((css: string) => {
+    const style = document.createElement("style");
+    style.textContent = css;
     document.head?.appendChild(style);
     document.documentElement.spellcheck = false;
-  });
+  }, CURSOR_CSS);
 
-  if (showCursor) await injectCursor(page, 0, 0, cursorSmoothing);
+  if (showCursor) await injectCursor(page, initialX, initialY, cursorSmoothing);
+  await injectCustomCaret(page);
+}
+
+export async function reinjectCursor(
+  page: Page,
+  x: number,
+  y: number,
+  showCursor = true,
+  cursorSmoothing = 10,
+) {
+  if (showCursor) await injectCursor(page, x, y, cursorSmoothing);
   await injectCustomCaret(page);
 }
 
