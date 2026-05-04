@@ -214,6 +214,21 @@
                 width: 3px;
                 background-color: black;
             }
+
+            .text,
+            .text-2 {
+                font-size: 3vw;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                margin: 0;
+            }
+
+            .text-box {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+            }
         </style>
     </head>
     <body>
@@ -262,10 +277,64 @@
                 <input type="email" />
             </div>
             <div class="cell">
-                <div class="circle-css-animation"></div>
+                <p class="text">
+                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. At
+                    a nam, ab delectus cupiditate earum cumque numquam autem
+                    sunt quis, voluptatibus aspernatur. Aut laboriosam similique
+                    hic eum rem pariatur accusamus. Lorem, ipsum dolor sit amet
+                    consectetur adipisicing elit. At a nam, ab delectus
+                    cupiditate earum cumque numquam autem sunt quis,
+                    voluptatibus aspernatur. Aut laboriosam similique hic eum
+                    rem pariatur accusamus. Lorem, ipsum dolor sit amet
+                    consectetur adipisicing elit. At a nam, ab delectus
+                    cupiditate earum cumque numquam autem sunt quis,
+                    voluptatibus aspernatur. Aut laboriosam similique hic eum
+                    rem pariatur accusamus. Lorem, ipsum dolor sit amet
+                    consectetur adipisicing elit. At a nam, ab delectus
+                    cupiditate earum cumque numquam autem sunt quis,
+                    voluptatibus aspernatur. Aut laboriosam similique hic eum
+                    rem pariatur accusamus. Lorem, ipsum dolor sit amet
+                    consectetur adipisicing elit. At a nam, ab delectus
+                    cupiditate earum cumque numquam autem sunt quis,
+                    voluptatibus aspernatur. Aut laboriosam similique hic eum
+                    rem pariatur accusamus. Lorem, ipsum dolor sit amet
+                    consectetur adipisicing elit. At a nam, ab delectus
+                    cupiditate earum cumque numquam autem sunt quis,
+                    voluptatibus aspernatur. Aut laboriosam similique hic eum
+                    rem pariatur accusamus.
+                </p>
             </div>
             <div class="cell">
-                <div class="circle-css-animation"></div>
+                <div class="text-box">
+                    <button id="scroll-button">scroll</button>
+                    <p class="text-2">
+                        Lorem, ipsum dolor sit amet consectetur adipisicing
+                        elit. At a nam, ab delectus cupiditate earum cumque
+                        numquam autem sunt quis, voluptatibus aspernatur. Aut
+                        laboriosam similique hic eum rem pariatur accusamus.
+                        Lorem, ipsum dolor sit amet consectetur adipisicing
+                        elit. At a nam, ab delectus cupiditate earum cumque
+                        numquam autem sunt quis, voluptatibus aspernatur. Aut
+                        laboriosam similique hic eum rem pariatur accusamus.
+                        Lorem, ipsum dolor sit amet consectetur adipisicing
+                        elit. At a nam, ab delectus cupiditate earum cumque
+                        numquam autem sunt quis, voluptatibus aspernatur. Aut
+                        laboriosam similique hic eum rem pariatur accusamus.
+                        Lorem, ipsum dolor sit amet consectetur adipisicing
+                        elit. At a nam, ab delectus cupiditate earum cumque
+                        numquam autem sunt quis, voluptatibus aspernatur. Aut
+                        laboriosam similique hic eum rem pariatur accusamus.
+                        Lorem, ipsum dolor sit amet consectetur adipisicing
+                        elit. At a nam, ab delectus cupiditate earum cumque
+                        numquam autem sunt quis, voluptatibus aspernatur. Aut
+                        laboriosam similique hic eum rem pariatur accusamus.
+                        Lorem, ipsum dolor sit amet consectetur adipisicing
+                        elit. At a nam, ab delectus cupiditate earum cumque
+                        numquam autem sunt quis, voluptatibus aspernatur. Aut
+                        laboriosam similique hic eum rem pariatur accusamus.
+                        <span></span>
+                    </p>
+                </div>
             </div>
             <div class="cell">
                 <div class="circle-css-animation"></div>
@@ -376,19 +445,6 @@
                             caretElement.style.top = `${rect.y}px`;
                             caretElement.style.left = `${rect.x}px`;
                         }
-
-                        console.log(rect);
-
-                        // return {
-                        //     element: el,
-                        //     caretPos: el.selectionStart,
-                        //     selectionStart: el.selectionStart,
-                        //     selectionEnd: el.selectionEnd,
-                        //     selectedText: el.value.slice(
-                        //         el.selectionStart,
-                        //         el.selectionEnd,
-                        //     ),
-                        // };
                     }
                 }
 
@@ -440,6 +496,55 @@
 
                 intervalSwitch = !intervalSwitch;
             }, 2000);
+
+            function getElementSelector(el) {
+                const path = [];
+                let node = el;
+                while (node && node.nodeType === Node.ELEMENT_NODE) {
+                    if (node.id) {
+                        path.unshift(
+                            `${node.tagName.toLowerCase()}#${node.id}`,
+                        );
+                        break;
+                    }
+                    const siblings = node.parentNode
+                        ? Array.from(node.parentNode.children).filter(
+                              (s) => s.tagName === node.tagName,
+                          )
+                        : [node];
+                    const idx = siblings.indexOf(node) + 1;
+                    path.unshift(
+                        siblings.length > 1
+                            ? `${node.tagName.toLowerCase()}:nth-of-type(${idx})`
+                            : node.tagName.toLowerCase(),
+                    );
+                    node = node.parentNode;
+                }
+                return path.join(" > ");
+            }
+
+            let lastUserInputTime = 0;
+            document.addEventListener("wheel", (e) => {
+                lastUserInputTime = Date.now();
+            });
+
+            document.addEventListener(
+                "scroll",
+                (e) => {
+                    const isUserScroll = Date.now() - lastUserInputTime < 200;
+                    console.log("Is user scroll: ", isUserScroll);
+                    console.log(getElementSelector(e.target));
+                },
+                { capture: true },
+            );
+
+            const scrollButton = document.querySelector("#scroll-button");
+            scrollButton.addEventListener("click", () => {
+                const text2 = document.querySelector(".text-2 > span");
+                text2.scrollIntoView({
+                    behavior: "smooth",
+                });
+            });
         </script>
     </body>
 </html>

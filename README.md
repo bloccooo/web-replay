@@ -11,43 +11,50 @@ Record a user session in a real browser and replay it — at any screen size —
 ## Install
 
 ```bash
-bun install
+curl -fsSL https://raw.githubusercontent.com/bloccooo/web-replay/main/install.sh | bash
 ```
+
+The script will:
+- Install **ffmpeg** if it's not already present (via `brew`, `apt`, `dnf`, or `pacman`)
+- Download the correct binary for your OS and architecture
+- Place it in `/usr/local/bin/wsr` (or `~/.local/bin/wsr` if you don't have write access)
+
+**Chromium** is downloaded automatically by Puppeteer on first use.
 
 ## Commands
 
 ### Record a session
 
 ```bash
-bun src/index.ts record <url> -o <file>
+wsr record <url> -o <file>
 ```
 
 ```bash
 # Record at full window size
-bun src/index.ts record https://example.com -o session.json
+wsr record https://example.com -o session.json
 
 # Record at a specific viewport size
-bun src/index.ts record https://example.com -o session.json --width 1920 --height 1080
+wsr record https://example.com -o session.json --width 1920 --height 1080
 ```
 
 ### Replay a session
 
 ```bash
-bun src/index.ts replay <file> [options]
+wsr replay <file> [options]
 ```
 
 ```bash
 # Replay at the same size as recorded
-bun src/index.ts replay session.json
-
-# Replay at a different viewport size
-bun src/index.ts replay session.json --width 1280 --height 720
+wsr replay session.json
 
 # Replay at half speed
-bun src/index.ts replay session.json --speed 0.5
+wsr replay session.json --speed 0.5
 
-# Replay at 2× speed on a specific screen size
-bun src/index.ts replay session.json --speed 2 --width 1920 --height 1080
+# Replay at 2× resolution (same layout, higher quality output)
+wsr replay session.json --scale 2
+
+# Show the browser window during replay
+wsr replay session.json --no-headless
 ```
 
 ## Options
@@ -56,8 +63,11 @@ bun src/index.ts replay session.json --speed 2 --width 1920 --height 1080
 |---|---|---|
 | `record` | `-o`, `--output` | Output file path (default: `session.json`) |
 | `record` | `--width`, `--height` | Viewport size (default: maximized window) |
+| `record` | `--fullscreen` | Launch in fullscreen kiosk mode |
 | `replay` | `--speed` | Playback speed multiplier (default: `1.0`) |
-| `replay` | `--width`, `--height` | Viewport size override (default: recorded size) |
+| `replay` | `--fps` | Output frame rate (default: `60`) |
+| `replay` | `--scale` | Resolution multiplier — scales output without affecting layout (default: `1`) |
+| `replay` | `--no-headless` | Show the browser window during replay |
 
 ## Session file
 

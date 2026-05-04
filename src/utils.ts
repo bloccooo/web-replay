@@ -1,6 +1,44 @@
-import type { Page } from "puppeteer";
+import type { KeyInput, Page } from "puppeteer";
 import { injectCursor, injectCustomCaret, CARET_ID } from "./cursor";
 import { virtualTimer } from "./virtualTimer";
+import { type Event } from "./types";
+
+function buttonName(button: number): "left" | "middle" | "right" {
+  if (button === 1) return "middle";
+  if (button === 2) return "right";
+  return "left";
+}
+
+export async function applyEvent(page: Page, event: Event) {
+  if (event.type === "mousemove") {
+    await page.mouse.move(event.x, event.y);
+  } else if (event.type === "keydown") {
+    await page.keyboard.down(event.key as KeyInput);
+  } else if (event.type === "keyup") {
+    await page.keyboard.up(event.key as KeyInput);
+  } else if (event.type === "mousedown") {
+    await page.mouse.move(event.x, event.y);
+    await page.mouse.down({ button: buttonName(event.button) });
+  } else if (event.type === "mouseup") {
+    await page.mouse.move(event.x, event.y);
+    await page.mouse.up({ button: buttonName(event.button) });
+  } else if (event.type === "scroll") {
+    await page.evaluate(
+      ({ scrollX, scrollY, selector }) => {
+        const el =
+          document.querySelector(selector) ??
+          document.scrollingElement ??
+          document.documentElement;
+        window._webRecorder.scrollTargets.set(el, { x: scrollX, y: scrollY });
+      },
+      {
+        scrollX: event.scrollX,
+        scrollY: event.scrollY,
+        selector: event.selector,
+      },
+    );
+  }
+}
 
 export async function setupDocumentReplayOverrides(page: Page) {
   await page.exposeFunction("_getVirtualTime", () => {
@@ -8,6 +46,14 @@ export async function setupDocumentReplayOverrides(page: Page) {
   });
 
   await page.evaluateOnNewDocument(() => {
+    // Save native scroll APIs before overriding them
+    const _nativeElementScroll = Element.prototype.scroll as (
+      options: ScrollToOptions,
+    ) => void;
+    const _nativeWindowScroll = window.scroll as (
+      options: ScrollToOptions,
+    ) => void;
+
     window._webRecorder = {
       virtualTime: 0,
       cursorX: 0,
@@ -19,6 +65,14 @@ export async function setupDocumentReplayOverrides(page: Page) {
       animations: new Map(),
       scrollTargets: new Map(),
       scrollCurrents: new Map(),
+      scrollElement: (el: Element, x: number, y: number) =>
+        _nativeElementScroll.call(el, { left: x, top: y, behavior: "instant" }),
+      scrollWindow: (x: number, y: number) =>
+        _nativeWindowScroll.call(window, {
+          left: x,
+          top: y,
+          behavior: "instant",
+        }),
     };
 
     document.addEventListener("mousemove", (e) => {
@@ -26,21 +80,37 @@ export async function setupDocumentReplayOverrides(page: Page) {
       window._webRecorder.cursorY = e.clientY;
     });
 
-    function animateScroll() {
-      for (const [el, target] of window._webRecorder.scrollTargets) {
-        const current = window._webRecorder.scrollCurrents.get(el) ?? {
-          x: el.scrollLeft,
-          y: el.scrollTop,
-        };
-        const newX = current.x + (target.x - current.x) * 0.2;
-        const newY = current.y + (target.y - current.y) * 0.2;
-        el.scrollLeft = newX;
-        el.scrollTop = newY;
-        window._webRecorder.scrollCurrents.set(el, { x: newX, y: newY });
+    const SCROLL_SMOOTHING = 3; // higher = snappier, lower = more gradual
+    let scrollPrevTimestamp = 0;
+    function animateScroll(timestamp: number) {
+      const deltaTime = timestamp - scrollPrevTimestamp;
+      scrollPrevTimestamp = timestamp;
+      if (deltaTime > 0) {
+        const factor = 1 - Math.exp((-SCROLL_SMOOTHING * deltaTime) / 1000);
+        for (const [el, target] of window._webRecorder.scrollTargets) {
+          const current = window._webRecorder.scrollCurrents.get(el) ?? {
+            x: el.scrollLeft,
+            y: el.scrollTop,
+          };
+          const newX = current.x + (target.x - current.x) * factor;
+          const newY = current.y + (target.y - current.y) * factor;
+          window._webRecorder.scrollElement(el, newX, newY);
+          window._webRecorder.scrollCurrents.set(el, { x: newX, y: newY });
+        }
       }
       requestAnimationFrame(animateScroll);
     }
-    animateScroll();
+    animateScroll(0);
+
+    // Disable programmatic scrolling — replay drives scroll via scrollTargets
+    const noop = () => {};
+    Element.prototype.scrollIntoView = noop;
+    Element.prototype.scroll = noop;
+    Element.prototype.scrollTo = noop;
+    Element.prototype.scrollBy = noop;
+    window.scroll = noop;
+    window.scrollTo = noop;
+    window.scrollBy = noop;
 
     // Date override
     Date.now = () => window._webRecorder.virtualTime;
@@ -94,8 +164,10 @@ export async function setupDocumentReplayOverrides(page: Page) {
 export async function setupCursor(page: Page) {
   await page.evaluate(() => {
     const style = document.createElement("style");
-    style.textContent = "* { cursor: none !important; }";
+    style.textContent =
+      "* { cursor: none !important; scroll-behavior: auto !important; }";
     document.head?.appendChild(style);
+    document.documentElement.spellcheck = false;
   });
 
   await injectCursor(page, 0, 0);

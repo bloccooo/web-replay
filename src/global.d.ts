@@ -27,6 +27,8 @@ declare global {
       >;
       scrollTargets: Map<Element, { x: number; y: number }>;
       scrollCurrents: Map<Element, { x: number; y: number }>;
+      scrollElement: (el: Element, x: number, y: number) => void;
+      scrollWindow: (x: number, y: number) => void;
     };
   }
 }

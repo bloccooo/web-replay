@@ -1,7 +1,6 @@
 import { writeFileSync } from "node:fs";
 import { launchBrowser } from "./browser";
-import { type Event } from "./events";
-import type { Session } from "./types";
+import type { Session, Event } from "./types";
 
 export interface RecordOptions {
   width?: number;
@@ -18,8 +17,6 @@ export async function record(
   const height = opts.height || 720;
   const fullscreen = !!opts.fullscreen;
 
-  console.log(width, height);
-
   const { browser, page } = await launchBrowser({
     width,
     height,
@@ -27,6 +24,11 @@ export async function record(
   });
 
   await page.goto(startUrl);
+
+  const viewport = await page.evaluate(() => ({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  }));
 
   const events: Event[] = [];
 
@@ -68,7 +70,7 @@ export async function record(
 
   await page.exposeFunction(
     "recordScroll",
-    (event: { scrollX: number; scrollY: number }) => {
+    (event: { scrollX: number; scrollY: number; selector: string }) => {
       events.push({
         ...event,
         type: "scroll",
@@ -79,6 +81,30 @@ export async function record(
 
   await page.evaluate(() => {
     const w = window as any;
+
+    function getElementSelector(el: Element): string {
+      const path: string[] = [];
+      let node: Element | null = el;
+      while (node && node.nodeType === Node.ELEMENT_NODE) {
+        if (node.id) {
+          path.unshift(`${node.tagName.toLowerCase()}#${node.id}`);
+          break;
+        }
+        const siblings = node.parentNode
+          ? Array.from(node.parentNode.children).filter(
+              (s) => s.tagName === (node as Element).tagName,
+            )
+          : [node];
+        const idx = siblings.indexOf(node) + 1;
+        path.unshift(
+          siblings.length > 1
+            ? `${node.tagName.toLowerCase()}:nth-of-type(${idx})`
+            : node.tagName.toLowerCase(),
+        );
+        node = node.parentNode as Element | null;
+      }
+      return path.join(" > ");
+    }
 
     document.addEventListener("mousemove", (e) =>
       w.recordMouseMove({ x: e.clientX, y: e.clientY }),
@@ -110,19 +136,24 @@ export async function record(
       }),
     );
 
+    let lastUserInputTime = 0;
+    document.addEventListener("wheel", (e) => {
+      lastUserInputTime = Date.now();
+    });
+
     document.addEventListener(
       "scroll",
       (e) => {
         const target = e.target;
+        const el: Element =
+          target === document
+            ? (document.scrollingElement ?? document.documentElement)
+            : (target as Element);
+
         w.recordScroll({
-          scrollX:
-            target === document
-              ? window.scrollX
-              : (target as Element).scrollLeft,
-          scrollY:
-            target === document
-              ? window.scrollY
-              : (target as Element).scrollTop,
+          scrollX: target === document ? window.scrollX : el.scrollLeft,
+          scrollY: target === document ? window.scrollY : el.scrollTop,
+          selector: getElementSelector(el),
         });
       },
       { capture: true },
@@ -137,8 +168,8 @@ export async function record(
     version: 1,
     startUrl,
     viewport: {
-      width: opts.width || 1280,
-      height: opts.height || 720,
+      width: viewport.width,
+      height: viewport.height,
       fullscreen,
     },
     events,

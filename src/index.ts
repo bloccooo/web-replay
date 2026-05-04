@@ -21,6 +21,8 @@ Replay options:
   --height <px>                    Viewport height override
   --fps <number>                   Frame rate
   --fullscreen                     Launch in fullscreen kiosk mode (hides address bar)
+  --no-headless                    Show the browser window during replay
+  --scale <factor>                 Output resolution multiplier (default: 1, e.g. 2 for 2x)
 `);
 }
 
@@ -89,7 +91,9 @@ async function main() {
     const width = flags["width"] ? parseInt(flags["width"], 10) : undefined;
     const height = flags["height"] ? parseInt(flags["height"], 10) : undefined;
     const fullscreen = flags["fullscreen"] === "true";
-    await replay(file, { speed, width, height, fullscreen });
+    const headless = flags["no-headless"] === "true" ? false : true;
+    const scale = flags["scale"] ? parseFloat(flags["scale"]) : 1;
+    await replay(file, { speed, width, height, fullscreen, headless, scale });
   } else {
     console.error(`Unknown command: ${command}`);
     printUsage();

@@ -4,6 +4,7 @@ export interface SizeOptions {
   width?: number;
   height?: number;
   fullscreen?: boolean;
+  headless?: boolean;
 }
 
 async function measureChromeOverhead(): Promise<{
@@ -54,18 +55,23 @@ export async function launchBrowser(
   if (opts.fullscreen) {
     sizeArgs = ["--kiosk"];
   } else if (fixedSize) {
-    const { chromeW, chromeH, screenWidth, screenHeight } =
-      await measureChromeOverhead();
-    sizeArgs = [
-      `--window-size=${opts.width! + chromeW},${opts.height! + chromeH}`,
-      `--window-position=${Math.round((screenWidth - (opts.width! + chromeW)) * 0.5)},${Math.round((screenHeight - (opts.height! + chromeH)) * 0.5)}`,
-    ];
+    if (opts.headless) {
+      // Headless has no browser chrome, so window size == viewport size directly
+      sizeArgs = [`--window-size=${opts.width},${opts.height}`];
+    } else {
+      const { chromeW, chromeH, screenWidth, screenHeight } =
+        await measureChromeOverhead();
+      sizeArgs = [
+        `--window-size=${opts.width! + chromeW},${opts.height! + chromeH}`,
+        `--window-position=${Math.round((screenWidth - (opts.width! + chromeW)) * 0.5)},${Math.round((screenHeight - (opts.height! + chromeH)) * 0.5)}`,
+      ];
+    }
   } else {
     sizeArgs = ["--start-maximized"];
   }
 
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: opts.headless ?? false,
     defaultViewport: null,
     args: [...sizeArgs, ...CHROMIUM_FLAGS],
   });
