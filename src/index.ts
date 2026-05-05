@@ -29,6 +29,9 @@ Replay options:
   --duration <seconds>             Stop replay after this many seconds
   --scroll-smoothing <number>      Scroll interpolation factor (default: 6, higher = snappier)
   --cursor-smoothing <number>      Cursor interpolation factor (default: 10, higher = snappier)
+  --workers <number>               Number of parallel browser instances (default: 1)
+  --wait-for-network               Wait for network idle after each frame (improves accuracy for data-driven UIs)
+  --diagnose                       Print per-phase timing every 60 frames to identify bottlenecks
 `);
 }
 
@@ -106,10 +109,34 @@ async function main() {
     const scale = flags["scale"] ? parseFloat(flags["scale"]) : 1;
     const quality = flags["quality"];
     const cursor = flags["no-cursor"] !== "true";
-    const duration = flags["duration"] ? parseFloat(flags["duration"]) : undefined;
-    const scrollSmoothing = flags["scroll-smoothing"] ? parseFloat(flags["scroll-smoothing"]) : undefined;
-    const cursorSmoothing = flags["cursor-smoothing"] ? parseFloat(flags["cursor-smoothing"]) : undefined;
-    await replay(file, { speed, width, height, fullscreen, headless, scale, quality, cursor, duration, scrollSmoothing, cursorSmoothing });
+    const duration = flags["duration"]
+      ? parseFloat(flags["duration"])
+      : undefined;
+    const scrollSmoothing = flags["scroll-smoothing"]
+      ? parseFloat(flags["scroll-smoothing"])
+      : undefined;
+    const cursorSmoothing = flags["cursor-smoothing"]
+      ? parseFloat(flags["cursor-smoothing"])
+      : undefined;
+    const workers = flags["workers"] ? parseInt(flags["workers"], 10) : 1;
+    const waitForNetwork = flags["wait-for-network"] === "true";
+    const diagnose = flags["diagnose"] === "true";
+    await replay(file, {
+      speed,
+      width,
+      height,
+      fullscreen,
+      headless,
+      scale,
+      quality,
+      cursor,
+      duration,
+      scrollSmoothing,
+      cursorSmoothing,
+      workers,
+      waitForNetwork,
+      diagnose,
+    });
   } else {
     console.error(`Unknown command: ${command}`);
     printUsage();

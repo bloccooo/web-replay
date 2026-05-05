@@ -1,3 +1,6 @@
+import { unlinkSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
+
 const QUALITY_CRF: Record<string, number> = { high: 18, medium: 23, low: 28 };
 
 export function createVideoEncoder(fps: number, output: string, width: number, height: number, quality: string = "medium") {
@@ -29,4 +32,20 @@ export function createVideoEncoder(fps: number, output: string, width: number, h
       if (code !== 0) throw new Error(`ffmpeg exited with code ${code}`);
     },
   };
+}
+
+export async function concatVideos(inputs: string[], output: string) {
+  const listContent = inputs.map((p) => `file '${resolve(p)}'`).join("\n");
+  const listPath = `wsr_concat_${Date.now()}.txt`;
+  writeFileSync(listPath, listContent);
+  try {
+    const proc = Bun.spawn({
+      cmd: ["ffmpeg", "-f", "concat", "-safe", "0", "-i", listPath, "-c", "copy", "-y", output],
+      stderr: "ignore",
+    });
+    const code = await proc.exited;
+    if (code !== 0) throw new Error(`ffmpeg concat exited with code ${code}`);
+  } finally {
+    try { unlinkSync(listPath); } catch {}
+  }
 }

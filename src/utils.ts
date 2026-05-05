@@ -1,6 +1,6 @@
 import type { KeyInput, Page } from "puppeteer";
 import { injectCursor, injectCustomCaret, CARET_ID } from "./cursor";
-import { virtualTimer } from "./virtualTimer";
+import type { VirtualTimer } from "./virtualTimer";
 import { type Event } from "./types";
 
 function buttonName(button: number): "left" | "middle" | "right" {
@@ -54,10 +54,11 @@ export async function applyEvent(page: Page, event: Event) {
 
 export async function setupDocumentReplayOverrides(
   page: Page,
+  timer: VirtualTimer,
   scrollSmoothing = 12,
 ) {
   await page.exposeFunction("_getVirtualTime", () => {
-    return virtualTimer.get();
+    return timer.get();
   });
 
   await page.evaluateOnNewDocument((scrollSmoothing: number) => {
@@ -217,210 +218,214 @@ export async function reinjectCursor(
   await injectCustomCaret(page);
 }
 
-export async function evaluateFrameState(page: Page) {
-  await page.evaluate(async () => {
-    // Update virtual time
-    window._webRecorder.virtualTime = await window._getVirtualTime();
-    Date.now = () => window._webRecorder.virtualTime;
-    Date.prototype.getTime = () => window._webRecorder.virtualTime;
-    performance.now = () => window._webRecorder.virtualTime;
+// Merged single-evaluate replacement for the old evaluateFrameState + evaluateFrame pair.
+// scanAnimations throttles the expensive document.getAnimations() detection scan.
+export async function evaluateTick(
+  page: Page,
+  virtualTime: number,
+  scanAnimations: boolean,
+): Promise<{ animCount: number; rafCount: number; timeoutCount: number; intervalCount: number }> {
+  const animCount = await page.evaluate(
+    (virtualTime: number, caretId: string, scanAnimations: boolean) => {
+      // 1. Sync virtual time
+      window._webRecorder.virtualTime = virtualTime;
+      Date.now = () => window._webRecorder.virtualTime;
+      Date.prototype.getTime = () => window._webRecorder.virtualTime;
+      performance.now = () => window._webRecorder.virtualTime;
 
-    // Detect and store animations
-    for (const animation of document.getAnimations()) {
-      const isCSSTransition = animation instanceof CSSTransition;
-      const isCSSAnimation = animation instanceof CSSAnimation;
-      if (!isCSSTransition && !isCSSAnimation) continue;
+      // 2. Detect new CSS animations / transitions (throttled by caller).
+      //    document.getAnimations() only called on scan frames.
+      let animCount = 0;
+      if (scanAnimations) {
+        const live = document.getAnimations();
+        animCount = live.length;
+        for (const animation of live) {
+          const isCSSTransition = animation instanceof CSSTransition;
+          const isCSSAnimation = animation instanceof CSSAnimation;
+          if (!isCSSTransition && !isCSSAnimation) continue;
 
-      const target = (animation.effect as KeyframeEffect)?.target as Element;
-      if (!target) continue;
+          const target = (animation.effect as KeyframeEffect)?.target as Element;
+          if (!target) continue;
 
-      const key = isCSSTransition
-        ? `t:${(animation as CSSTransition).transitionProperty}`
-        : `a:${(animation as CSSAnimation).animationName}`;
+          const key = isCSSTransition
+            ? `t:${(animation as CSSTransition).transitionProperty}`
+            : `a:${(animation as CSSAnimation).animationName}`;
 
-      if (!window._webRecorder.animations.has(target)) {
-        window._webRecorder.animations.set(target, new Map());
+          if (!window._webRecorder.animations.has(target)) {
+            window._webRecorder.animations.set(target, new Map());
+          }
+
+          const byKey = window._webRecorder.animations.get(target)!;
+          const existing = byKey.get(key);
+          if (!existing || existing.animationRef !== animation) {
+            const timing = animation.effect!.getTiming();
+            const delay = (timing.delay as number) || 0;
+            const duration = timing.duration as number;
+            const iterations = timing.iterations ?? 1;
+            byKey.set(key, {
+              virtualStart: window._webRecorder.virtualTime,
+              // Include delay so we don't prematurely evict the entry while the
+              // animation is still in its delay phase (currentTime < delay).
+              duration:
+                iterations === Infinity
+                  ? Infinity
+                  : delay + duration * iterations,
+              animationRef: animation,
+            });
+          }
+        }
       }
 
-      const byKey = window._webRecorder.animations.get(target)!;
-      const existing = byKey.get(key);
-      if (!existing || existing.animationRef !== animation) {
-        const timing = animation.effect!.getTiming();
-        const delay = (timing.delay as number) || 0;
-        const duration = timing.duration as number;
-        const iterations = timing.iterations ?? 1;
-        byKey.set(key, {
-          virtualStart: window._webRecorder.virtualTime,
-          // Include delay so we don't prematurely evict the entry while the
-          // animation is still in its delay phase (currentTime < delay).
-          duration:
-            iterations === Infinity ? Infinity : delay + duration * iterations,
-          animationRef: animation,
-        });
+      // 3. Drive tracked animations via animationRef.playState —
+      //    no document.getAnimations() call needed on non-scan frames.
+      for (const [element, byKey] of window._webRecorder.animations) {
+        for (const [key, entry] of byKey) {
+          const { virtualStart, duration, animationRef } = entry;
+          const elapsed = virtualTime - virtualStart;
+          const ps = animationRef.playState;
+
+          if (ps === "running" || ps === "paused") {
+            animationRef.pause();
+
+            if (duration === 0) {
+              // Zero-duration animation: must call finish() to dispatch animationend.
+              const delay =
+                (animationRef.effect!.getTiming().delay as number) || 0;
+              if (elapsed >= delay) {
+                animationRef.finish();
+                byKey.delete(key);
+              }
+            } else {
+              animationRef.currentTime = elapsed;
+              if (duration !== Infinity && elapsed >= duration) {
+                animationRef.finish();
+                byKey.delete(key);
+              }
+            }
+          } else if (duration !== Infinity && elapsed >= duration) {
+            byKey.delete(key);
+          }
+        }
+
+        if (byKey.size === 0) window._webRecorder.animations.delete(element);
       }
-    }
-  });
-}
 
-export async function evaluateFrame(page: Page) {
-  await page.evaluate((caretId) => {
-    // Drive CSS animations & CSS Transitions
-    for (const [element, byKey] of window._webRecorder.animations) {
-      for (const [key, { virtualStart, duration }] of byKey) {
-        const elapsed = window._webRecorder.virtualTime - virtualStart;
-        const isTransition = key.startsWith("t:");
-        const name = key.slice(2);
+      // 5. Drive requestAnimationFrame callbacks
+      const callbacksToRun = window._webRecorder.requestAnimationFrameCallbacks;
+      window._webRecorder.requestAnimationFrameCallbacks = [];
+      for (const callback of callbacksToRun) {
+        callback(window._webRecorder.virtualTime);
+      }
+      const rafCount = callbacksToRun.length;
 
-        const animation = document.getAnimations().find((animation) => {
-          if ((animation.effect as KeyframeEffect)?.target !== element)
-            return false;
-          if (isTransition) {
-            return (
-              animation instanceof CSSTransition &&
-              (animation as CSSTransition).transitionProperty === name
-            );
-          } else {
-            return (
-              animation instanceof CSSAnimation &&
-              (animation as CSSAnimation).animationName === name
-            );
-          }
-        });
-
-        if (animation) {
-          animation.pause(); // prevent real-time firing
-
-          if (duration === 0) {
-            // Zero-duration animation used purely to delay a side-effect via animationend.
-            // Must call finish() (not just set currentTime) to properly dispatch animationend.
-            const delay = (animation.effect!.getTiming().delay as number) || 0;
-            if (elapsed >= delay) {
-              animation.finish();
-              byKey.delete(key);
-            }
-          } else {
-            animation.currentTime = elapsed;
-            if (duration !== Infinity && elapsed >= duration) {
-              // finish() removes the animation from document.getAnimations() so
-              // evaluateFrameState won't re-register it and restart it next frame.
-              animation.finish();
-              byKey.delete(key);
-            }
-          }
-        } else if (duration !== Infinity && elapsed >= duration) {
-          byKey.delete(key);
+      // 6. Drive timeouts
+      const pendingTimeouts = window._webRecorder.timeouts;
+      window._webRecorder.timeouts = [];
+      let timeoutCount = 0;
+      for (const entry of pendingTimeouts) {
+        if (window._webRecorder.virtualTime >= entry.scheduledAt) {
+          entry.callback();
+          timeoutCount++;
+        } else {
+          window._webRecorder.timeouts.push(entry);
         }
       }
 
-      if (byKey.size === 0) window._webRecorder.animations.delete(element);
-    }
-
-    // Drive animation frame requests
-    const callbacksToRun = window._webRecorder.requestAnimationFrameCallbacks;
-    window._webRecorder.requestAnimationFrameCallbacks = [];
-
-    for (const callback of callbacksToRun) {
-      callback(window._webRecorder.virtualTime);
-    }
-
-    // Drive timeouts
-    const pendingTimeouts = window._webRecorder.timeouts;
-    window._webRecorder.timeouts = [];
-    for (const entry of pendingTimeouts) {
-      if (window._webRecorder.virtualTime >= entry.scheduledAt) {
-        entry.callback();
-      } else {
-        window._webRecorder.timeouts.push(entry);
-      }
-    }
-
-    // Drive SVG animations
-    // for (const svg of document.querySelectorAll("svg")) {
-    //   (svg as SVGSVGElement).pauseAnimations();
-    //   (svg as SVGSVGElement).setCurrentTime(
-    //     window._webRecorder.virtualTime / 1000,
-    //   );
-    // }
-
-    // Drive intervals
-    for (const entry of window._webRecorder.intervals) {
-      const expectedCalls = Math.floor(
-        (window._webRecorder.virtualTime - entry.startTime) / entry.interval,
-      );
-      while (entry.callCount < expectedCalls) {
-        entry.callback();
-        entry.callCount++;
-      }
-    }
-
-    // Coerce input types that don't support selectionStart to text
-    const NO_SELECTION_TYPES = new Set([
-      "email",
-      "number",
-      "date",
-      "month",
-      "week",
-      "time",
-      "datetime-local",
-      "range",
-      "color",
-    ]);
-    document.querySelectorAll("input").forEach((el) => {
-      if (NO_SELECTION_TYPES.has((el as HTMLInputElement).type))
-        (el as HTMLInputElement).type = "text";
-    });
-
-    // Update custom caret
-    const caretEl = document.getElementById(caretId);
-    if (caretEl) {
-      const active = document.activeElement as
-        | HTMLInputElement
-        | HTMLTextAreaElement
-        | null;
-
-      if (
-        active &&
-        (active.tagName === "INPUT" || active.tagName === "TEXTAREA") &&
-        active.selectionStart !== null
-      ) {
-        const mirror = document.createElement("div");
-        const styles = window.getComputedStyle(active);
-        for (let i = 0; i < styles.length; i++) {
-          const prop = styles[i];
-          if (prop) {
-            mirror.style[prop as any] = styles.getPropertyValue(prop);
-          }
-        }
-        const inputRect = active.getBoundingClientRect();
-        mirror.style.position = "fixed";
-        mirror.style.top = `${inputRect.top}px`;
-        mirror.style.left = `${inputRect.left}px`;
-        mirror.style.width = `${inputRect.width}px`;
-        mirror.style.height = `${inputRect.height}px`;
-        mirror.style.transform = "none";
-        mirror.style.visibility = "hidden";
-        mirror.style.whiteSpace = "pre-wrap";
-
-        mirror.appendChild(
-          document.createTextNode(active.value.slice(0, active.selectionStart)),
+      // 7. Drive intervals
+      let intervalCount = 0;
+      for (const entry of window._webRecorder.intervals) {
+        const expectedCalls = Math.floor(
+          (window._webRecorder.virtualTime - entry.startTime) / entry.interval,
         );
-        const marker = document.createElement("span");
-        marker.textContent = "|";
-        mirror.appendChild(marker);
-        document.body.appendChild(mirror);
-        const rect = marker.getBoundingClientRect();
-        document.body.removeChild(mirror);
-
-        const CARET_BLINK_INTERVAL_MS = 500;
-        const vt = window._webRecorder.virtualTime;
-        const visible = Math.floor(vt / CARET_BLINK_INTERVAL_MS) % 2 === 0;
-
-        caretEl.style.transform = `translate(${rect.left}px,${rect.top}px)`;
-        caretEl.style.height = `${rect.height}px`;
-        caretEl.style.display = visible ? "block" : "none";
-      } else {
-        caretEl.style.display = "none";
+        while (entry.callCount < expectedCalls) {
+          entry.callback();
+          entry.callCount++;
+          intervalCount++;
+        }
       }
-    }
-  }, CARET_ID);
+
+      // 8. Coerce input types that don't support selectionStart to text
+      const NO_SELECTION_TYPES = new Set([
+        "email",
+        "number",
+        "date",
+        "month",
+        "week",
+        "time",
+        "datetime-local",
+        "range",
+        "color",
+      ]);
+      document.querySelectorAll("input").forEach((el) => {
+        if (NO_SELECTION_TYPES.has((el as HTMLInputElement).type))
+          (el as HTMLInputElement).type = "text";
+      });
+
+      // 9. Update custom caret
+      const caretEl = document.getElementById(caretId);
+      if (caretEl) {
+        const active = document.activeElement as
+          | HTMLInputElement
+          | HTMLTextAreaElement
+          | null;
+
+        if (
+          active &&
+          (active.tagName === "INPUT" || active.tagName === "TEXTAREA") &&
+          active.selectionStart !== null
+        ) {
+          const mirror = document.createElement("div");
+          const styles = window.getComputedStyle(active);
+          for (let i = 0; i < styles.length; i++) {
+            const prop = styles[i];
+            if (prop) {
+              mirror.style[prop as any] = styles.getPropertyValue(prop);
+            }
+          }
+          const inputRect = active.getBoundingClientRect();
+          mirror.style.position = "fixed";
+          mirror.style.top = `${inputRect.top}px`;
+          mirror.style.left = `${inputRect.left}px`;
+          mirror.style.width = `${inputRect.width}px`;
+          mirror.style.height = `${inputRect.height}px`;
+          mirror.style.transform = "none";
+          mirror.style.visibility = "hidden";
+          mirror.style.whiteSpace = "pre-wrap";
+
+          mirror.appendChild(
+            document.createTextNode(
+              active.value.slice(0, active.selectionStart),
+            ),
+          );
+          const marker = document.createElement("span");
+          marker.textContent = "|";
+          mirror.appendChild(marker);
+          document.body.appendChild(mirror);
+          const rect = marker.getBoundingClientRect();
+          document.body.removeChild(mirror);
+
+          const CARET_BLINK_INTERVAL_MS = 500;
+          const vt = window._webRecorder.virtualTime;
+          const visible = Math.floor(vt / CARET_BLINK_INTERVAL_MS) % 2 === 0;
+
+          caretEl.style.transform = `translate(${rect.left}px,${rect.top}px)`;
+          caretEl.style.height = `${rect.height}px`;
+          caretEl.style.display = visible ? "block" : "none";
+        } else {
+          caretEl.style.display = "none";
+        }
+      }
+
+      return { animCount, rafCount, timeoutCount, intervalCount };
+    },
+    virtualTime,
+    CARET_ID,
+    scanAnimations,
+  );
+  return {
+    animCount: animCount?.animCount ?? 0,
+    rafCount: animCount?.rafCount ?? 0,
+    timeoutCount: animCount?.timeoutCount ?? 0,
+    intervalCount: animCount?.intervalCount ?? 0,
+  };
 }

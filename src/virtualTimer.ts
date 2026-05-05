@@ -1,12 +1,15 @@
-const fps = 60;
-const interval = 1000 / fps;
+export class VirtualTimer {
+  private time: number;
 
-export const virtualTimer = {
-  time: 0,
+  constructor(startTime = 0) {
+    this.time = startTime;
+  }
+
   get() {
     return this.time;
-  },
-  advance() {
+  }
+
+  advance(interval: number) {
     this.time += interval;
-  },
-};
+  }
+}
