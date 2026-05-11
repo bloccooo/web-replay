@@ -45,6 +45,8 @@ const CHROMIUM_FLAGS = [
   "--disable-background-timer-throttling",
   "--disable-renderer-backgrounding",
   "--disable-backgrounding-occluded-windows",
+  "--disable-features=SpellcheckService,SpellingService",
+  "--disable-features=AutofillServerCommunication",
 ];
 
 export async function launchBrowser(
