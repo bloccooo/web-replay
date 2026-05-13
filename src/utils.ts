@@ -9,7 +9,7 @@ function buttonName(button: number): "left" | "middle" | "right" {
   return "left";
 }
 
-function validCoords(x: number, y: number) {
+export function validCoords(x: number, y: number) {
   return Number.isFinite(x) && Number.isFinite(y);
 }
 
@@ -173,6 +173,7 @@ export async function setupDocumentReplayOverrides(
         (i) => i.id !== id,
       );
     }) as unknown as typeof window.clearInterval;
+
   }, scrollSmoothing);
 }
 

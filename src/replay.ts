@@ -9,6 +9,7 @@ import {
   evaluateFrameState,
   evaluateFrame,
   applyEvent,
+  validCoords,
 } from "./utils";
 import type { Session } from "./types";
 
@@ -63,12 +64,13 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}) {
   let lastCursorX = firstCoordEvent ? (firstCoordEvent as any).x : 0;
   let lastCursorY = firstCoordEvent ? (firstCoordEvent as any).y : 0;
 
-  await setupCursor(page, showCursor, cursorSmoothing, lastCursorX, lastCursorY);
-
-  page.on("framenavigated", async (frame) => {
-    if (frame.parentFrame() !== null) return;
-    await reinjectCursor(page, lastCursorX, lastCursorY, showCursor, cursorSmoothing);
-  });
+  await setupCursor(
+    page,
+    showCursor,
+    cursorSmoothing,
+    lastCursorX,
+    lastCursorY,
+  );
 
   const encoder = createVideoEncoder(
     fps,
@@ -79,7 +81,8 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}) {
   );
 
   const sessionDuration = Math.max(...events.map((e) => e.timestamp));
-  const maxTime = opts.duration != null ? opts.duration * 1000 : sessionDuration;
+  const maxTime =
+    opts.duration != null ? opts.duration * 1000 : sessionDuration;
   const totalDuration = Math.min(maxTime, sessionDuration);
 
   function renderProgress(virtualTime: number) {
@@ -93,36 +96,109 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}) {
     process.stdout.write(`\rReplaying  [${bar}] ${pctStr}  ${cur}s / ${tot}s`);
   }
 
+  const cdp = await page.createCDPSession();
+
+  let shouldCapture = false;
+  let writingFrame = false;
+  let captureSetAt = 0;
+
+  const screencastParams = {
+    format: "png" as const,
+    quality: 0,
+    everyNthFrame: 1,
+    maxWidth: session.viewport.width,
+    maxHeight: session.viewport.height,
+  };
+
+  await cdp.send("Page.startScreencast", screencastParams);
+
+  // After a top-level navigation Chrome drops the screencast stream internally.
+  // Restart it so frames keep flowing.
+  page.on("framenavigated", async (frame) => {
+    if (frame.parentFrame() !== null) return;
+    await reinjectCursor(
+      page,
+      lastCursorX,
+      lastCursorY,
+      showCursor,
+      cursorSmoothing,
+    );
+    await cdp.send("Page.stopScreencast").catch(() => {});
+    await cdp.send("Page.startScreencast", screencastParams).catch(() => {});
+  });
+
+  cdp.on("Page.screencastFrame", async (event) => {
+    // Ack immediately so Chrome keeps pushing without waiting on us.
+    cdp
+      .send("Page.screencastFrameAck", { sessionId: event.sessionId })
+      .catch(() => {});
+
+    const data = Buffer.from(event.data, "base64");
+
+    if (shouldCapture) {
+      writingFrame = true;
+      shouldCapture = false;
+      encoder.writeFrame(data).then(() => {
+        writingFrame = false;
+        shouldCapture = false;
+      });
+    }
+  });
+
   // Events are timestamp-sorted; use a pointer so each frame is O(k) not O(n).
   let eventIdx = 0;
 
   while (virtualTimer.get() < maxTime && eventIdx < events.length) {
+    if (writingFrame || shouldCapture) {
+      if (
+        shouldCapture &&
+        captureSetAt > 0 &&
+        Date.now() - captureSetAt > 150
+      ) {
+        // Chrome stopped pushing screencast frames (e.g. post-navigation).
+        // Fall back to a direct screenshot so we don't deadlock.
+        shouldCapture = false;
+        captureSetAt = 0;
+        writingFrame = true;
+        try {
+          const screenshot = await page.screenshot({ type: "png" });
+          encoder.writeFrame(Buffer.from(screenshot));
+        } catch {}
+        writingFrame = false;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      continue;
+    }
+
     const virtualTime = virtualTimer.get();
     const windowEnd = virtualTime + interval;
 
     const currentEvents: typeof events = [];
-    while (eventIdx < events.length && events[eventIdx]!.timestamp < windowEnd) {
+    while (
+      eventIdx < events.length &&
+      events[eventIdx]!.timestamp < windowEnd
+    ) {
       currentEvents.push(events[eventIdx]!);
       eventIdx++;
     }
 
     for (const event of currentEvents) {
       await applyEvent(page, event);
-      if ("x" in event && Number.isFinite((event as any).x)) {
-        lastCursorX = (event as any).x;
-        lastCursorY = (event as any).y;
+
+      if ("x" in event && validCoords(event.x, event.y)) {
+        lastCursorX = event.x;
+        lastCursorY = event.y;
       }
+
+      // Always apply cursor position to ensure no event is triggering an unwanted
+      // mouse move
+      await page.mouse.move(lastCursorX, lastCursorY);
     }
 
     await evaluateFrameState(page);
     await evaluateFrame(page);
-
-    const screenshot = (await page.screenshot({
-      type: "png",
-    })) as Buffer<ArrayBufferLike>;
-
-    await encoder.writeFrame(screenshot);
-    await new Promise((resolve) => setTimeout(resolve, 1));
+    shouldCapture = true;
+    captureSetAt = Date.now();
 
     virtualTimer.advance();
     renderProgress(virtualTimer.get());
@@ -130,6 +206,8 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}) {
 
   process.stdout.write("\n");
 
+  await cdp.send("Page.stopScreencast").catch(() => {});
+  await cdp.detach().catch(() => {});
   await encoder.finish();
 
   await browser.close();

@@ -7,7 +7,7 @@ export interface SizeOptions {
   headless?: boolean;
 }
 
-async function measureChromeOverhead(): Promise<{
+async function measureChromeOverhead(extraArgs: string[] = []): Promise<{
   chromeW: number;
   chromeH: number;
   screenWidth: number;
@@ -18,6 +18,7 @@ async function measureChromeOverhead(): Promise<{
   const probe = await puppeteer.launch({
     headless: false,
     defaultViewport: null,
+    args: extraArgs,
   });
   const page = (await probe.pages())[0]!;
   await page.goto("about:blank");
@@ -48,6 +49,7 @@ const CHROMIUM_FLAGS = [
   "--disable-features=SpellcheckService,SpellingService",
   "--disable-features=AutofillServerCommunication",
 ];
+
 
 export async function launchBrowser(
   opts: SizeOptions,
