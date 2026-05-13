@@ -209,6 +209,7 @@ export async function record(
     document.addEventListener(
       "click",
       (e) => {
+        if (e.detail === 0) return; // synthetic click from keyboard (Enter/Space)
         w.recordMouseButton({
           type: "click",
           x: e.clientX,
