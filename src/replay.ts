@@ -98,22 +98,6 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}) {
 
   const cdp = await page.createCDPSession();
 
-  let shouldCapture = false;
-  let writingFrame = false;
-  let captureSetAt = 0;
-
-  const screencastParams = {
-    format: "png" as const,
-    quality: 0,
-    everyNthFrame: 1,
-    maxWidth: session.viewport.width,
-    maxHeight: session.viewport.height,
-  };
-
-  await cdp.send("Page.startScreencast", screencastParams);
-
-  // After a top-level navigation Chrome drops the screencast stream internally.
-  // Restart it so frames keep flowing.
   page.on("framenavigated", async (frame) => {
     if (frame.parentFrame() !== null) return;
     await reinjectCursor(
@@ -123,53 +107,12 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}) {
       showCursor,
       cursorSmoothing,
     );
-    await cdp.send("Page.stopScreencast").catch(() => {});
-    await cdp.send("Page.startScreencast", screencastParams).catch(() => {});
-  });
-
-  cdp.on("Page.screencastFrame", async (event) => {
-    // Ack immediately so Chrome keeps pushing without waiting on us.
-    cdp
-      .send("Page.screencastFrameAck", { sessionId: event.sessionId })
-      .catch(() => {});
-
-    const data = Buffer.from(event.data, "base64");
-
-    if (shouldCapture) {
-      writingFrame = true;
-      shouldCapture = false;
-      encoder.writeFrame(data).then(() => {
-        writingFrame = false;
-        shouldCapture = false;
-      });
-    }
   });
 
   // Events are timestamp-sorted; use a pointer so each frame is O(k) not O(n).
   let eventIdx = 0;
 
   while (virtualTimer.get() < maxTime && eventIdx < events.length) {
-    if (writingFrame || shouldCapture) {
-      if (
-        shouldCapture &&
-        captureSetAt > 0 &&
-        Date.now() - captureSetAt > 150
-      ) {
-        // Chrome stopped pushing screencast frames (e.g. post-navigation).
-        // Fall back to a direct screenshot so we don't deadlock.
-        shouldCapture = false;
-        captureSetAt = 0;
-        writingFrame = true;
-        try {
-          const screenshot = await page.screenshot({ type: "png" });
-          encoder.writeFrame(Buffer.from(screenshot));
-        } catch {}
-        writingFrame = false;
-      }
-      await new Promise((resolve) => setTimeout(resolve, 10));
-      continue;
-    }
-
     const virtualTime = virtualTimer.get();
     const windowEnd = virtualTime + interval;
 
@@ -193,8 +136,13 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}) {
 
     await evaluateFrameState(page);
     await evaluateFrame(page);
-    shouldCapture = true;
-    captureSetAt = Date.now();
+
+    const data = await page.screenshot({
+      optimizeForSpeed: true,
+      type: "jpeg",
+      quality: 100,
+    });
+    await encoder.writeFrame(Buffer.from(data));
 
     virtualTimer.advance();
     renderProgress(virtualTimer.get());
@@ -202,7 +150,6 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}) {
 
   process.stdout.write("\n");
 
-  await cdp.send("Page.stopScreencast").catch(() => {});
   await cdp.detach().catch(() => {});
   await encoder.finish();
 
