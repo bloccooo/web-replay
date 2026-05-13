@@ -189,10 +189,6 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}) {
         lastCursorX = event.x;
         lastCursorY = event.y;
       }
-
-      // Always apply cursor position to ensure no event is triggering an unwanted
-      // mouse move
-      await page.mouse.move(lastCursorX, lastCursorY);
     }
 
     await evaluateFrameState(page);
