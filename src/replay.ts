@@ -139,8 +139,7 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}) {
 
     const data = await page.screenshot({
       optimizeForSpeed: true,
-      type: "jpeg",
-      quality: 100,
+      type: "png",
     });
     await encoder.writeFrame(Buffer.from(data));
 
