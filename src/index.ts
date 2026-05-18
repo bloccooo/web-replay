@@ -29,6 +29,7 @@ Replay options:
   --duration <seconds>             Stop replay after this many seconds
   --scroll-smoothing <number>      Scroll interpolation factor (default: 6, higher = snappier)
   --cursor-smoothing <number>      Cursor interpolation factor (default: 10, higher = snappier)
+  -o, --output <path>              Output file path (default: output.mp4)
 `);
 }
 
@@ -109,7 +110,8 @@ async function main() {
     const duration = flags["duration"] ? parseFloat(flags["duration"]) : undefined;
     const scrollSmoothing = flags["scroll-smoothing"] ? parseFloat(flags["scroll-smoothing"]) : undefined;
     const cursorSmoothing = flags["cursor-smoothing"] ? parseFloat(flags["cursor-smoothing"]) : undefined;
-    await replay(file, { speed, width, height, fullscreen, headless, scale, quality, cursor, duration, scrollSmoothing, cursorSmoothing });
+    const output = flags["o"] ?? flags["output"];
+    await replay(file, { speed, width, height, fullscreen, headless, scale, quality, cursor, duration, scrollSmoothing, cursorSmoothing, output });
   } else {
     console.error(`Unknown command: ${command}`);
     printUsage();

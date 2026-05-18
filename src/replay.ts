@@ -26,6 +26,7 @@ export interface ReplayOptions {
   duration?: number;
   scrollSmoothing?: number;
   cursorSmoothing?: number;
+  output?: string;
 }
 
 export async function replay(sessionPath: string, opts: ReplayOptions = {}) {
@@ -74,7 +75,7 @@ export async function replay(sessionPath: string, opts: ReplayOptions = {}) {
 
   const encoder = createVideoEncoder(
     fps,
-    "output.mp4",
+    opts.output ?? "output.mp4",
     session.viewport.width * scale,
     session.viewport.height * scale,
     opts.quality,
