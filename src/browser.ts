@@ -1,4 +1,7 @@
 import puppeteer, { type Browser, type Page } from "puppeteer";
+import { mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 export interface SizeOptions {
   width?: number;
@@ -35,6 +38,10 @@ async function measureChromeOverhead(extraArgs: string[] = []): Promise<{
 }
 
 const CHROMIUM_FLAGS = [
+  "--disable-application-cache",
+  "--disk-cache-size=0",
+  "--aggressive-cache-discard",
+  "--disable-cache",
   "--hide-scrollbars",
   "--ignore-gpu-blocklist",
   "--enable-gpu-rasterization",
@@ -75,9 +82,12 @@ export async function launchBrowser(
     sizeArgs = ["--start-maximized"];
   }
 
+  const userDataDir = mkdtempSync(join(tmpdir(), "web-replay-"));
+
   const browser = await puppeteer.launch({
     headless: opts.headless ?? false,
     defaultViewport: null,
+    userDataDir,
     args: [...sizeArgs, ...CHROMIUM_FLAGS],
   });
 
